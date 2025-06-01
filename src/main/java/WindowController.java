@@ -23,6 +23,12 @@ public class WindowController implements ActionListener {
 
     private JPanel millingParameters;
 
+    private JTextField[] drillingFields;
+
+    private JTextField[] millingFields;
+
+    private JTextField[] turningFields;
+
     private JButton[] tools;
 
     private JButton[] control;
@@ -35,9 +41,14 @@ public class WindowController implements ActionListener {
 
     private Data data;
 
+    private JTextField output;
+
 
     public WindowController() {
         frame = new JFrame();
+        output = new JTextField();
+        output.setSize(new Dimension(450, 400));
+        frame.add(output, BorderLayout.PAGE_END);
         panel = new JPanel();
         text = new JLabel();
         calculator = new Calculator();
@@ -55,6 +66,9 @@ public class WindowController implements ActionListener {
     }
 
     public void getAction(String text) {
+        if (text.isBlank()) {
+            return;
+        }
         if (text.equals("Turning")) {
             data.setCuttingType(text);
             turningWindow();
@@ -66,7 +80,7 @@ public class WindowController implements ActionListener {
             drillingWindow();
         } else if (text.equals("Back")) {
             backFunction(last);
-        } else if (text.equals("Turning Out")) {
+        } else if (text.equals("Turning out")) {
             data.setToolType(text);
             materialsMatrixPanel();
         } else if (text.equals("Boring")) {
@@ -88,24 +102,67 @@ public class WindowController implements ActionListener {
             data.setToolType(text);
             materialsMatrixPanel();
         } else if (text.equals("Submit")) {
+            String p1 = blankChange(drillingFields[0].getText());
+            String p2 = blankChange(drillingFields[1].getText());
+            if (validNumbers(p1) && validNumbers(p2)) {
+                data.setDiameter(Double.parseDouble(p1));
+                data.setDepth(Double.parseDouble(p2));
+            }
             materialsMatrixPanel();
             outputWindow();
+        } else if (text.equals("Go")) {
+            if (data.getCuttingType().equals("Turning")) {
+                String p1 = blankChange(turningFields[0].getText());
+                String p2 = blankChange(turningFields[1].getText());
+                String p3 = blankChange(turningFields[2].getText());
+                String p4 = blankChange(turningFields[3].getText());
+                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4)) {
+                    data.setDiameter(Double.parseDouble(p1));
+                    data.setDepth(Double.parseDouble(p2));
+                    data.setLength(Double.parseDouble(p3));
+                    data.setChamfersCount(Integer.parseInt(p4));
+                }
+            } else if (data.getCuttingType().equals("Milling")) {
+                String p1 = blankChange(millingFields[0].getSelectedText());
+                String p2 = blankChange(millingFields[1].getSelectedText());
+                if (validNumbers(p1) && validNumbers(p2)) {
+                    data.setSquare(Double.parseDouble(p1));
+                    data.setDepth(Double.parseDouble(p2));
+                }
+            }
         } else {
+            data.setMaterial(text);
             if (data.getCuttingType().equals("Turning")) {
                 turningParametersWindow();
             } else if (data.getCuttingType().equals("Milling")) {
                 millingParametersWindow();
+            } else {
+
             }
         }
+        System.out.println(data);
+    }
+
+    public String blankChange(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.isBlank() ? "0": text;
+    }
+
+    public boolean validNumbers(String text) {
+        System.out.println(text);
+        return text.matches("([0-9]*[.])?[0-9]+");
     }
 
     public void mainPage() {
-        frame.setSize(1500, 300);
+        frame.setSize(450, 800);
+        frame.setResizable(false);
         frame.setVisible(true);
         text.setBackground(new Color(30, 30, 30));
         text.setForeground(new Color(30, 200, 100));
         text.setHorizontalAlignment(JLabel.CENTER);
-        text.setFont(new Font("Ink Free", Font.BOLD, 30));
+        text.setFont(new Font("Ink Free", Font.PLAIN, 20));
         text.setText("Cuttingtime calculator");
         text.setOpaque(true);
         panel.setLayout(new BorderLayout());
@@ -114,17 +171,13 @@ public class WindowController implements ActionListener {
         frame.add(panel, BorderLayout.NORTH);
 
         toolType = new JPanel();
-        toolType.setLayout(new GridLayout(1, 3));
+        toolType.setLayout(new GridLayout(3, 3));
         toolType.setBackground(new Color(200, 200, 200));
-        tools = new JButton[3];
-        String[] types = new String[]{"Turning", "Milling", "Drilling"};
-        for (int i = 0; i < 3; i++) {
-            tools[i] = new JButton();
+        tools = new JButton[9];
+        String[] types = new String[]{"Turning", "Milling", "Drilling", "", "", "", "", "", ""};
+        for (int i = 0; i < 9; i++) {
+            tools[i] = createButton(types[i]);
             toolType.add(tools[i]);
-            tools[i].setFont(new Font("MVBoli", Font.BOLD, 50));
-            tools[i].setFocusable(false);
-            tools[i].addActionListener(this);
-            tools[i].setText(types[i]);
         }
         control = tools;
         last = toolType;
@@ -133,18 +186,20 @@ public class WindowController implements ActionListener {
 
     public void backFunction(JPanel oldPanel) {
         frame.remove(oldPanel);
+        data.reset();
         mainPage();
     }
 
     public void render(JPanel panel) {
-        frame.getContentPane().add(panel);
         frame.setResizable(false);
+        frame.getContentPane().add(panel);
         frame.pack();
         frame.setVisible(true);
     }
 
     public JButton createButton(String text) {
         JButton button = new JButton();
+        button.setPreferredSize(new Dimension(150, 80));
         button.setText(text);
         button.setFont(new Font("MVBoli", Font.PLAIN, 20));
         button.setFocusable(false);
@@ -152,14 +207,22 @@ public class WindowController implements ActionListener {
         return button;
     }
 
+    public JTextField createTextField(String name) {
+        JTextField field = new JTextField();
+        field.setName(name);
+        field.addActionListener(this);
+        field.setFont(new Font("MVBoli", Font.PLAIN, 20));
+        return field;
+    }
+
 
     public void turningWindow() {
         turning = new JPanel();
-        turning.setLayout(new GridLayout(1, 5));
+        turning.setLayout(new GridLayout(3, 3));
         turning.setBackground(new Color(200, 200, 200));
-        JButton[] buttons = new JButton[5];
-        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Back"};
-        for (int i = 0; i < 5; i++) {
+        JButton[] buttons = new JButton[9];
+        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Back", "", "", "", ""};
+        for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             turning.add(buttons[i]);
         }
@@ -172,11 +235,11 @@ public class WindowController implements ActionListener {
 
     public void millingWindow() {
         milling = new JPanel();
-        milling.setLayout(new GridLayout(1, 5));
+        milling.setLayout(new GridLayout(3, 3));
         milling.setBackground(new Color(200, 200, 200));
-        JButton[] buttons = new JButton[4];
-        String[] types = new String[]{"End milling", "Face milling", "Disk milling", "Back"};
-        for (int i = 0; i < 4; i++) {
+        JButton[] buttons = new JButton[9];
+        String[] types = new String[]{"End milling", "Face milling", "Disk milling", "Back", "", "", "", "", ""};
+        for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             milling.add(buttons[i]);
         }
@@ -187,21 +250,17 @@ public class WindowController implements ActionListener {
     }
 
     public void drillingWindow() {
-        JTextField[] jTextFields = new JTextField[2];
-        JButton[] buttons = new JButton[2];
-        String[] types = new String[]{"Submit", "Back"};
+        drillingFields = new JTextField[2];
+        JButton[] buttons = new JButton[7];
+        String[] types = new String[]{"Submit", "Back", "", "", "", "", ""};
         drilling = new JPanel();
-        drilling.setLayout(new GridLayout(1, 5));
+        drilling.setLayout(new GridLayout(3, 3));
         drilling.setBackground(new Color(200, 200, 200));
-        jTextFields[0] = new JTextField();
-        jTextFields[0].setText("Diameter");
-        jTextFields[0].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        drilling.add(jTextFields[0]);
-        jTextFields[1] = new JTextField();
-        jTextFields[1].setText("Length");
-        jTextFields[1].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        drilling.add(jTextFields[1]);
-        for (int i = 0; i < buttons.length; i++) {
+        drillingFields[0] = createTextField("Diameter");
+        drilling.add(drillingFields[0]);
+        drillingFields[1] = createTextField("Length");
+        drilling.add(drillingFields[1]);
+        for (int i = 0; i < 7; i++) {
             buttons[i] = createButton(types[i]);
             drilling.add(buttons[i]);
         }
@@ -229,21 +288,17 @@ public class WindowController implements ActionListener {
     }
 
     public void millingParametersWindow() {
-        JTextField[] jTextFields = new JTextField[2];
-        JButton[] buttons = new JButton[2];
-        String[] types = new String[]{"Go", "Back"};
+        millingFields = new JTextField[2];
+        JButton[] buttons = new JButton[7];
+        String[] types = new String[]{"Go", "Back", "", "", "", "", ""};
         millingParameters = new JPanel();
-        millingParameters.setLayout(new GridLayout(1, 5));
+        millingParameters.setLayout(new GridLayout(3, 3));
         millingParameters.setBackground(new Color(200, 200, 200));
-        jTextFields[0] = new JTextField();
-        jTextFields[0].setText("Square");
-        jTextFields[0].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        millingParameters.add(jTextFields[0]);
-        jTextFields[1] = new JTextField();
-        jTextFields[1].setText("Depth");
-        jTextFields[1].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        millingParameters.add(jTextFields[1]);
-        for (int i = 0; i < buttons.length; i++) {
+        millingFields[0] = createTextField("Square");
+        millingParameters.add(millingFields[0]);
+        millingFields[1] = createTextField("Depth");
+        millingParameters.add(millingFields[1]);
+        for (int i = 0; i < 7; i++) {
             buttons[i] = createButton(types[i]);
             millingParameters.add(buttons[i]);
         }
@@ -254,29 +309,21 @@ public class WindowController implements ActionListener {
     }
 
     public void turningParametersWindow() {
-        JTextField[] jTextFields = new JTextField[4];
-        JButton[] buttons = new JButton[2];
-        String[] types = new String[]{"Go", "Back"};
+        turningFields = new JTextField[4];
+        JButton[] buttons = new JButton[5];
+        String[] types = new String[]{"Go", "Back", "", "", ""};
         turningParameters = new JPanel();
-        turningParameters.setLayout(new GridLayout(1, 5));
+        turningParameters.setLayout(new GridLayout(3, 3));
         turningParameters.setBackground(new Color(200, 200, 200));
-        jTextFields[0] = new JTextField();
-        jTextFields[0].setText("Diameter");
-        jTextFields[0].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        turningParameters.add(jTextFields[0]);
-        jTextFields[1] = new JTextField();
-        jTextFields[1].setText("Total depth");
-        jTextFields[1].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        turningParameters.add(jTextFields[1]);
-        jTextFields[2] = new JTextField();
-        jTextFields[2].setText("Length");
-        jTextFields[2].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        turningParameters.add(jTextFields[2]);
-        jTextFields[3] = new JTextField();
-        jTextFields[3].setText("Chamfers count");
-        jTextFields[3].setFont(new Font("MVBoli", Font.PLAIN, 20));
-        turningParameters.add(jTextFields[3]);
-        for (int i = 0; i < buttons.length; i++) {
+        turningFields[0] = createTextField("Diameter");
+        turningParameters.add(turningFields[0]);
+        turningFields[1] = createTextField("Total depth");
+        turningParameters.add(turningFields[1]);
+        turningFields[2] = createTextField("Length");
+        turningParameters.add(turningFields[2]);
+        turningFields[3] = createTextField("Chamfers count");
+        turningParameters.add(turningFields[3]);
+        for (int i = 0; i < 5; i++) {
             buttons[i] = createButton(types[i]);
             turningParameters.add(buttons[i]);
         }

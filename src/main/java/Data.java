@@ -14,6 +14,8 @@ public class Data {
 
     private double depth;
 
+    private int chamfersCount;
+
 
 
     public Data(){}
@@ -96,5 +98,27 @@ public class Data {
 
     public void setDepth(double depth) {
         this.depth = depth;
+    }
+
+    public int getChamfersCount() {
+        return chamfersCount;
+    }
+
+    public void setChamfersCount(int chamfersCount) {
+        this.chamfersCount = chamfersCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "cuttingType='" + cuttingType + '\'' +
+                ", toolType='" + toolType + '\'' +
+                ", diameter=" + diameter +
+                ", length=" + length +
+                ", material='" + material + '\'' +
+                ", square=" + square +
+                ", depth=" + depth +
+                ", chamfersCount=" + chamfersCount +
+                '}';
     }
 }
