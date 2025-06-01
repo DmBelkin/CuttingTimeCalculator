@@ -16,6 +16,10 @@ public class Data {
 
     private int chamfersCount;
 
+    private double threadStep;
+
+    private double segmentGrooveWidth;
+
 
 
     public Data(){}
@@ -42,6 +46,22 @@ public class Data {
         this.material = "";
         this.square = 0;
         this.depth = 0;
+    }
+
+    public double getThreadStep() {
+        return threadStep;
+    }
+
+    public void setThreadStep(double threadStep) {
+        this.threadStep = threadStep;
+    }
+
+    public double getSegmentGrooveWidth() {
+        return segmentGrooveWidth;
+    }
+
+    public void setSegmentGrooveWidth(double segmentGrooveWidth) {
+        this.segmentGrooveWidth = segmentGrooveWidth;
     }
 
     public String getCuttingType() {

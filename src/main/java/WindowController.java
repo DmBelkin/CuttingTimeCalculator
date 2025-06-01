@@ -123,8 +123,8 @@ public class WindowController implements ActionListener {
                     data.setChamfersCount(Integer.parseInt(p4));
                 }
             } else if (data.getCuttingType().equals("Milling")) {
-                String p1 = blankChange(millingFields[0].getSelectedText());
-                String p2 = blankChange(millingFields[1].getSelectedText());
+                String p1 = blankChange(millingFields[0].getText());
+                String p2 = blankChange(millingFields[1].getText());
                 if (validNumbers(p1) && validNumbers(p2)) {
                     data.setSquare(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
@@ -209,7 +209,7 @@ public class WindowController implements ActionListener {
 
     public JTextField createTextField(String name) {
         JTextField field = new JTextField();
-        field.setName(name);
+        field.setText(name);
         field.addActionListener(this);
         field.setFont(new Font("MVBoli", Font.PLAIN, 20));
         return field;
@@ -221,7 +221,7 @@ public class WindowController implements ActionListener {
         turning.setLayout(new GridLayout(3, 3));
         turning.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
-        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Back", "", "", "", ""};
+        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Threading", "", "", "", "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             turning.add(buttons[i]);
@@ -232,13 +232,27 @@ public class WindowController implements ActionListener {
         render(turning);
     }
 
+    public void segmentTurningParametersPanel() {
+        /**
+         * TODO
+         * write panel to user input with depth segment, grooveWidth
+         */
+    }
+
+    public void threadTurningParametersPanel() {
+        /**
+         * TODO
+         * write panel to user input with thread step,
+         */
+    }
+
 
     public void millingWindow() {
         milling = new JPanel();
         milling.setLayout(new GridLayout(3, 3));
         milling.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
-        String[] types = new String[]{"End milling", "Face milling", "Disk milling", "Back", "", "", "", "", ""};
+        String[] types = new String[]{"End milling", "Face milling", "Disk milling", "", "", "", "", "", "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             milling.add(buttons[i]);
@@ -252,7 +266,7 @@ public class WindowController implements ActionListener {
     public void drillingWindow() {
         drillingFields = new JTextField[2];
         JButton[] buttons = new JButton[7];
-        String[] types = new String[]{"Submit", "Back", "", "", "", "", ""};
+        String[] types = new String[]{"", "", "", "", "", "Submit", "Back"};
         drilling = new JPanel();
         drilling.setLayout(new GridLayout(3, 3));
         drilling.setBackground(new Color(200, 200, 200));
@@ -275,8 +289,8 @@ public class WindowController implements ActionListener {
         materials.setLayout(new GridLayout(3, 3));
         materials.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
-        String[] types = new String[]{"Steel", "Aluminium alloys", "Hard steel",
-        "Cuprum alloys", "Stainless steel", "Textolit", "Plastic", "Cast Iron", "Back"};
+        String[] types = new String[]{"Steel", "Aluminium alloys", "Hard steel", "Stainless steel",
+        "Cuprum alloys", "Textolit", "Plastic", "Titan", "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             materials.add(buttons[i]);
@@ -290,7 +304,7 @@ public class WindowController implements ActionListener {
     public void millingParametersWindow() {
         millingFields = new JTextField[2];
         JButton[] buttons = new JButton[7];
-        String[] types = new String[]{"Go", "Back", "", "", "", "", ""};
+        String[] types = new String[]{"", "", "", "", "", "Go", "Back"};
         millingParameters = new JPanel();
         millingParameters.setLayout(new GridLayout(3, 3));
         millingParameters.setBackground(new Color(200, 200, 200));
@@ -311,7 +325,7 @@ public class WindowController implements ActionListener {
     public void turningParametersWindow() {
         turningFields = new JTextField[4];
         JButton[] buttons = new JButton[5];
-        String[] types = new String[]{"Go", "Back", "", "", ""};
+        String[] types = new String[]{"", "", "", "Go", "Back"};
         turningParameters = new JPanel();
         turningParameters.setLayout(new GridLayout(3, 3));
         turningParameters.setBackground(new Color(200, 200, 200));
