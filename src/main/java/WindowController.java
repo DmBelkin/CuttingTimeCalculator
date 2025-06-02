@@ -23,6 +23,14 @@ public class WindowController implements ActionListener {
 
     private JPanel millingParameters;
 
+    private JPanel segmentTurningParameters;
+
+    private JTextField[] segmentTurningFields;
+
+    private JPanel threadTurningParameters;
+
+    private JTextField[] threadTurningFields;
+
     private JTextField[] drillingFields;
 
     private JTextField[] millingFields;
@@ -48,10 +56,12 @@ public class WindowController implements ActionListener {
         frame = new JFrame();
         output = new JTextField();
         output.setSize(new Dimension(450, 400));
+        output.setFont(new Font("Ink Free", Font.PLAIN, 50));
         frame.add(output, BorderLayout.PAGE_END);
         panel = new JPanel();
         text = new JLabel();
         calculator = new Calculator();
+        calculator.setController(this);
         data = new Data();
         mainPage();
     }
@@ -98,6 +108,9 @@ public class WindowController implements ActionListener {
         } else if (text.equals("End milling")) {
             data.setToolType(text);
             materialsMatrixPanel();
+        } else if (text.equals("Threading")) {
+            data.setToolType(text);
+            materialsMatrixPanel();
         } else if (text.equals("Disk milling")) {
             data.setToolType(text);
             materialsMatrixPanel();
@@ -109,35 +122,64 @@ public class WindowController implements ActionListener {
                 data.setDepth(Double.parseDouble(p2));
             }
             materialsMatrixPanel();
-            outputWindow();
         } else if (text.equals("Go")) {
-            if (data.getCuttingType().equals("Turning")) {
+            if (data.getToolType().equals("Segment")) {
+                String p3 = blankChange(segmentTurningFields[0].getText());
+                String p4 = blankChange(segmentTurningFields[1].getText());
+                String p5 = blankChange(segmentTurningFields[2].getText());
+                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
+                    data.setBladeWidth(Double.parseDouble(p3));
+                    data.setDepth(Double.parseDouble(p4));
+                    data.setQualitat(Integer.parseInt(p5));
+                }
+            } else if (data.getToolType().equals("Threading")) {
+                String p2 = blankChange(threadTurningFields[0].getText());
+                String p3 = blankChange(threadTurningFields[1].getText());
+                String p4 = blankChange(threadTurningFields[2].getText());
+                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p2)) {
+                    data.setThreadStep(Double.parseDouble(p2));
+                    data.setDiameter(Double.parseDouble(p3));
+                    data.setLength(Double.parseDouble(p4));
+                }
+            } else if (data.getCuttingType().equals("Turning")) {
                 String p1 = blankChange(turningFields[0].getText());
                 String p2 = blankChange(turningFields[1].getText());
                 String p3 = blankChange(turningFields[2].getText());
                 String p4 = blankChange(turningFields[3].getText());
-                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4)) {
+                String p5 = blankChange(turningFields[4].getText());
+                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
+                validNumbers(p5)) {
                     data.setDiameter(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
                     data.setLength(Double.parseDouble(p3));
                     data.setChamfersCount(Integer.parseInt(p4));
+                    data.setQualitat(Integer.parseInt(p5));
                 }
             } else if (data.getCuttingType().equals("Milling")) {
                 String p1 = blankChange(millingFields[0].getText());
                 String p2 = blankChange(millingFields[1].getText());
-                if (validNumbers(p1) && validNumbers(p2)) {
+                String p3 = blankChange(millingFields[2].getText());
+                String p4 = blankChange(millingFields[3].getText());
+                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4)) {
                     data.setSquare(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
+                    data.setQualitat(Integer.parseInt(p3));
+                    data.setZcount(Integer.parseInt(p4));
                 }
             }
+            calculator.compute(data);
         } else {
             data.setMaterial(text);
-            if (data.getCuttingType().equals("Turning")) {
+            if (data.getToolType().equals("Segment")) {
+                segmentTurningParametersPanel();
+            } else if (data.getToolType().equals("Threading")) {
+                threadTurningParametersPanel();
+            } else if (data.getCuttingType().equals("Turning")) {
                 turningParametersWindow();
             } else if (data.getCuttingType().equals("Milling")) {
                 millingParametersWindow();
-            } else {
-
+            } else if (data.getCuttingType().equals("Drilling")){
+                calculator.compute(data);
             }
         }
         System.out.println(data);
@@ -147,7 +189,7 @@ public class WindowController implements ActionListener {
         if (text == null) {
             return "";
         }
-        return text.isBlank() ? "0": text;
+        return text.isBlank() ? "0" : text;
     }
 
     public boolean validNumbers(String text) {
@@ -187,6 +229,7 @@ public class WindowController implements ActionListener {
     public void backFunction(JPanel oldPanel) {
         frame.remove(oldPanel);
         data.reset();
+        output.setText("0.0");
         mainPage();
     }
 
@@ -233,16 +276,55 @@ public class WindowController implements ActionListener {
     }
 
     public void segmentTurningParametersPanel() {
-        /**
-         * TODO
-         * write panel to user input with depth segment, grooveWidth
-         */
+        segmentTurningFields = new JTextField[3];
+        JButton[] buttons = new JButton[6];
+        String[] types = new String[]{"", "", "", "", "Go", "Back"};
+        segmentTurningParameters = new JPanel();
+        segmentTurningParameters.setLayout(new GridLayout(3, 3));
+        segmentTurningParameters.setBackground(new Color(200, 200, 200));
+        segmentTurningFields[0] = createTextField("Blade width");
+        segmentTurningParameters.add(segmentTurningFields[0]);
+        segmentTurningFields[1] = createTextField("Depth");
+        segmentTurningParameters.add(segmentTurningFields[1]);
+        segmentTurningFields[2] = createTextField("Qualitat");
+        segmentTurningParameters.add(segmentTurningFields[2]);
+        for (int i = 0; i < 6; i++) {
+            buttons[i] = createButton(types[i]);
+            segmentTurningParameters.add(buttons[i]);
+        }
+        control = buttons;
+        frame.remove(last);
+        last = segmentTurningParameters;
+        render(segmentTurningParameters);
     }
 
     public void threadTurningParametersPanel() {
+        threadTurningFields = new JTextField[3];
+        JButton[] buttons = new JButton[6];
+        String[] types = new String[]{"", "", "", "", "Go", "Back"};
+        threadTurningParameters = new JPanel();
+        threadTurningParameters.setLayout(new GridLayout(3, 3));
+        threadTurningParameters.setBackground(new Color(200, 200, 200));
+        threadTurningFields[0] = createTextField("Step");
+        threadTurningParameters.add(threadTurningFields[0]);
+        threadTurningFields[1] = createTextField("Diameter");
+        threadTurningParameters.add(threadTurningFields[1]);
+        threadTurningFields[2] = createTextField("Length");
+        threadTurningParameters.add(threadTurningFields[2]);
+        for (int i = 0; i < 6; i++) {
+            buttons[i] = createButton(types[i]);
+            threadTurningParameters.add(buttons[i]);
+        }
+        control = buttons;
+        frame.remove(last);
+        last = threadTurningParameters;
+        render(threadTurningParameters);
+    }
+
+    public void discMillingParametersPanel() {
         /**
          * TODO
-         * write panel to user input with thread step,
+         * write panel to user input with depth/length, width mill
          */
     }
 
@@ -290,9 +372,10 @@ public class WindowController implements ActionListener {
         materials.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
         String[] types = new String[]{"Steel", "Aluminium alloys", "Hard steel", "Stainless steel",
-        "Cuprum alloys", "Textolit", "Plastic", "Titan", "Back"};
+                "Cuprum alloys", "Textolit", "Plastic", "Titan", "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
+            buttons[i].setFont(new Font("MVBoli", Font.PLAIN, 10));
             materials.add(buttons[i]);
         }
         control = buttons;
@@ -302,9 +385,9 @@ public class WindowController implements ActionListener {
     }
 
     public void millingParametersWindow() {
-        millingFields = new JTextField[2];
-        JButton[] buttons = new JButton[7];
-        String[] types = new String[]{"", "", "", "", "", "Go", "Back"};
+        millingFields = new JTextField[4];
+        JButton[] buttons = new JButton[5];
+        String[] types = new String[]{"", "", "", "Go", "Back"};
         millingParameters = new JPanel();
         millingParameters.setLayout(new GridLayout(3, 3));
         millingParameters.setBackground(new Color(200, 200, 200));
@@ -312,7 +395,11 @@ public class WindowController implements ActionListener {
         millingParameters.add(millingFields[0]);
         millingFields[1] = createTextField("Depth");
         millingParameters.add(millingFields[1]);
-        for (int i = 0; i < 7; i++) {
+        millingFields[2] = createTextField("Qualitat");
+        millingParameters.add(millingFields[2]);
+        millingFields[3] = createTextField("Z-count");
+        millingParameters.add(millingFields[3]);
+        for (int i = 0; i < 5; i++) {
             buttons[i] = createButton(types[i]);
             millingParameters.add(buttons[i]);
         }
@@ -323,9 +410,9 @@ public class WindowController implements ActionListener {
     }
 
     public void turningParametersWindow() {
-        turningFields = new JTextField[4];
-        JButton[] buttons = new JButton[5];
-        String[] types = new String[]{"", "", "", "Go", "Back"};
+        turningFields = new JTextField[5];
+        JButton[] buttons = new JButton[4];
+        String[] types = new String[]{"", "", "Go", "Back"};
         turningParameters = new JPanel();
         turningParameters.setLayout(new GridLayout(3, 3));
         turningParameters.setBackground(new Color(200, 200, 200));
@@ -337,7 +424,9 @@ public class WindowController implements ActionListener {
         turningParameters.add(turningFields[2]);
         turningFields[3] = createTextField("Chamfers count");
         turningParameters.add(turningFields[3]);
-        for (int i = 0; i < 5; i++) {
+        turningFields[4] = createTextField("Qualitat");
+        turningParameters.add(turningFields[4]);
+        for (int i = 0; i < 4; i++) {
             buttons[i] = createButton(types[i]);
             turningParameters.add(buttons[i]);
         }
@@ -347,7 +436,7 @@ public class WindowController implements ActionListener {
         render(turningParameters);
     }
 
-    public void outputWindow() {
-
+    public void outputWindow(double minutes) {
+         output.setText("" + minutes);
     }
 }

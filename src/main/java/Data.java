@@ -20,6 +20,12 @@ public class Data {
 
     private double segmentGrooveWidth;
 
+    private double bladeWidth;
+
+    private int qualitat;
+
+    private int Zcount;
+
 
 
     public Data(){}
@@ -46,6 +52,18 @@ public class Data {
         this.material = "";
         this.square = 0;
         this.depth = 0;
+        this.chamfersCount = 0;
+        this.threadStep = 0;
+        this.Zcount = 0;
+        this.qualitat = 0;
+    }
+
+    public double getBladeWidth() {
+        return bladeWidth;
+    }
+
+    public void setBladeWidth(double bladeWidth) {
+        this.bladeWidth = bladeWidth;
     }
 
     public double getThreadStep() {
@@ -60,6 +78,14 @@ public class Data {
         return segmentGrooveWidth;
     }
 
+    public int getZcount() {
+        return Zcount;
+    }
+
+    public void setZcount(int zcount) {
+        Zcount = zcount;
+    }
+
     public void setSegmentGrooveWidth(double segmentGrooveWidth) {
         this.segmentGrooveWidth = segmentGrooveWidth;
     }
@@ -70,6 +96,14 @@ public class Data {
 
     public void setCuttingType(String cuttingType) {
         this.cuttingType = cuttingType;
+    }
+
+    public int getQualitat() {
+        return qualitat;
+    }
+
+    public void setQualitat(int qualitat) {
+        this.qualitat = qualitat;
     }
 
     public String getToolType() {
@@ -139,6 +173,13 @@ public class Data {
                 ", square=" + square +
                 ", depth=" + depth +
                 ", chamfersCount=" + chamfersCount +
+                ", threadStep=" + threadStep +
+                ", segmentGrooveWidth=" + segmentGrooveWidth +
+                ", bladeWidth=" + bladeWidth +
+                ", qualitat=" + qualitat +
+                ", Z-count=" + Zcount +
                 '}';
     }
+
+
 }
