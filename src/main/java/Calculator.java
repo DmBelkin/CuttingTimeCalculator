@@ -82,6 +82,7 @@ public class Calculator {
 
 
     public double computeTurning(Data data) {
+        double Tpz = 0.5;
         double result = 0;
         int column = 0;
         for (int i = 0; i < materials.length; i++) {
@@ -94,20 +95,22 @@ public class Calculator {
         if (data.getToolType().equals("Turning out") || data.getToolType().equals("Boring")) {
             while (depth > 5) {
                 double Vc = Vc_turning[4][column][0];
-                result += data.getLength() / Vc_turning[4][column][2] / spinCount(Vc, data.getDiameter());
+                result += data.getLength() / Vc_turning[4][column][2] / spinCount(Vc, data.getDiameter()) + Tpz ;
                 depth -= 5;
             }
+            double changeTool = 1;
+            result += changeTool;
             double Vc1 = Vc_turning[3][column][0];
             double Vc2 = Vc_turning[2][column][0];
             double Vc3 = Vc_turning[1][column][0];
             double Vc4 = Vc_turning[0][column][0];
-            result += data.getLength() / Vc_turning[3][column][2] / spinCount(Vc1, data.getDiameter());
-            result += data.getLength() / Vc_turning[2][column][2] / spinCount(Vc2, data.getDiameter());
+            result += data.getLength() / Vc_turning[3][column][2] / spinCount(Vc1, data.getDiameter()) + Tpz;
+            result += data.getLength() / Vc_turning[2][column][2] / spinCount(Vc2, data.getDiameter()) + Tpz;
             if (data.getQualitat() <= 10) {
-                result += data.getLength() / Vc_turning[1][column][2] / spinCount(Vc3, data.getDiameter());
+                result += data.getLength() / Vc_turning[1][column][2] / spinCount(Vc3, data.getDiameter()) + Tpz;
             }
             if (data.getQualitat() <= 8) {
-                result += data.getLength() / Vc_turning[0][column][2] / spinCount(Vc4, data.getDiameter());
+                result += data.getLength() / Vc_turning[0][column][2] / spinCount(Vc4, data.getDiameter()) + Tpz;
             }
         } else if (data.getToolType().equals("Groove")) {
             while (depth > 5) {
