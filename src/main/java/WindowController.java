@@ -57,6 +57,9 @@ public class WindowController implements ActionListener {
         output = new JTextField();
         output.setSize(new Dimension(450, 400));
         output.setFont(new Font("Ink Free", Font.PLAIN, 50));
+        output.setBackground(new Color(30, 30, 30));
+        output.setForeground(new Color(30, 200, 100));
+        output.setText("0.0");
         frame.add(output, BorderLayout.PAGE_END);
         panel = new JPanel();
         text = new JLabel();
@@ -115,38 +118,47 @@ public class WindowController implements ActionListener {
             data.setToolType(text);
             materialsMatrixPanel();
         } else if (text.equals("Submit")) {
-            String p1 = blankChange(drillingFields[0].getText());
-            String p2 = blankChange(drillingFields[1].getText());
+            String p1 = drillingFields[0].getText();
+            String p2 = drillingFields[1].getText();
             if (validNumbers(p1) && validNumbers(p2)) {
                 data.setDiameter(Double.parseDouble(p1));
                 data.setDepth(Double.parseDouble(p2));
+                calculator.compute(data);
+            } else {
+                output.setText("Incorrect input");
             }
             materialsMatrixPanel();
         } else if (text.equals("Go")) {
             if (data.getToolType().equals("Segment")) {
-                String p3 = blankChange(segmentTurningFields[0].getText());
-                String p4 = blankChange(segmentTurningFields[1].getText());
-                String p5 = blankChange(segmentTurningFields[2].getText());
+                String p3 = segmentTurningFields[0].getText();
+                String p4 = segmentTurningFields[1].getText();
+                String p5 = segmentTurningFields[2].getText();
                 if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
                     data.setBladeWidth(Double.parseDouble(p3));
                     data.setDepth(Double.parseDouble(p4));
-                    data.setQualitat(Integer.parseInt(p5));
+                    data.setDiameter(Double.parseDouble(p5));
+                    calculator.compute(data);
+                } else {
+                    output.setText("Incorrect input");
                 }
             } else if (data.getToolType().equals("Threading")) {
-                String p2 = blankChange(threadTurningFields[0].getText());
-                String p3 = blankChange(threadTurningFields[1].getText());
-                String p4 = blankChange(threadTurningFields[2].getText());
+                String p2 = threadTurningFields[0].getText();
+                String p3 = threadTurningFields[1].getText();
+                String p4 = threadTurningFields[2].getText();
                 if (validNumbers(p3) && validNumbers(p4) && validNumbers(p2)) {
                     data.setThreadStep(Double.parseDouble(p2));
                     data.setDiameter(Double.parseDouble(p3));
                     data.setLength(Double.parseDouble(p4));
+                    calculator.compute(data);
+                } else {
+                    output.setText("Incorrect input");
                 }
             } else if (data.getCuttingType().equals("Turning")) {
-                String p1 = blankChange(turningFields[0].getText());
-                String p2 = blankChange(turningFields[1].getText());
-                String p3 = blankChange(turningFields[2].getText());
-                String p4 = blankChange(turningFields[3].getText());
-                String p5 = blankChange(turningFields[4].getText());
+                String p1 = turningFields[0].getText();
+                String p2 = turningFields[1].getText();
+                String p3 = turningFields[2].getText();
+                String p4 = turningFields[3].getText();
+                String p5 = turningFields[4].getText();
                 if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
                 validNumbers(p5)) {
                     data.setDiameter(Double.parseDouble(p1));
@@ -154,20 +166,25 @@ public class WindowController implements ActionListener {
                     data.setLength(Double.parseDouble(p3));
                     data.setChamfersCount(Integer.parseInt(p4));
                     data.setQualitat(Integer.parseInt(p5));
+                    calculator.compute(data);
+                } else {
+                    output.setText("Incorrect input");
                 }
             } else if (data.getCuttingType().equals("Milling")) {
-                String p1 = blankChange(millingFields[0].getText());
-                String p2 = blankChange(millingFields[1].getText());
-                String p3 = blankChange(millingFields[2].getText());
-                String p4 = blankChange(millingFields[3].getText());
+                String p1 = millingFields[0].getText();
+                String p2 = millingFields[1].getText();
+                String p3 = millingFields[2].getText();
+                String p4 = millingFields[3].getText();
                 if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4)) {
                     data.setSquare(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
                     data.setQualitat(Integer.parseInt(p3));
                     data.setZcount(Integer.parseInt(p4));
+                    calculator.compute(data);
+                } else {
+                    output.setText("Incorrect input");
                 }
             }
-            calculator.compute(data);
         } else {
             data.setMaterial(text);
             if (data.getToolType().equals("Segment")) {
@@ -185,16 +202,8 @@ public class WindowController implements ActionListener {
         System.out.println(data);
     }
 
-    public String blankChange(String text) {
-        if (text == null) {
-            return "";
-        }
-        return text.isBlank() ? "0" : text;
-    }
-
     public boolean validNumbers(String text) {
-        System.out.println(text);
-        return text.matches("([0-9]*[.])?[0-9]+");
+        return text.matches("([0-9]*[.])?[0-9]+") && !text.isEmpty();
     }
 
     public void mainPage() {
@@ -204,7 +213,7 @@ public class WindowController implements ActionListener {
         text.setBackground(new Color(30, 30, 30));
         text.setForeground(new Color(30, 200, 100));
         text.setHorizontalAlignment(JLabel.CENTER);
-        text.setFont(new Font("Ink Free", Font.PLAIN, 20));
+        text.setFont(new Font("Ink Free", Font.PLAIN, 50));
         text.setText("Cuttingtime calculator");
         text.setOpaque(true);
         panel.setLayout(new BorderLayout());
@@ -286,7 +295,7 @@ public class WindowController implements ActionListener {
         segmentTurningParameters.add(segmentTurningFields[0]);
         segmentTurningFields[1] = createTextField("Depth");
         segmentTurningParameters.add(segmentTurningFields[1]);
-        segmentTurningFields[2] = createTextField("Qualitat");
+        segmentTurningFields[2] = createTextField("Diameter");
         segmentTurningParameters.add(segmentTurningFields[2]);
         for (int i = 0; i < 6; i++) {
             buttons[i] = createButton(types[i]);
@@ -436,7 +445,7 @@ public class WindowController implements ActionListener {
         render(turningParameters);
     }
 
-    public void outputWindow(double minutes) {
-         output.setText("" + minutes);
+    public void outputWindow(String minutes) {
+         output.setText(minutes);
     }
 }

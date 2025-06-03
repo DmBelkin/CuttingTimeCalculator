@@ -6,6 +6,7 @@ public class Calculator {
             "Cuprum alloys", "Textolit", "Plastic", "Titan"};
 
     /**
+     * turning
      * "Steel", "Aluminium alloys", "Hard steel", "Stainless steel","Cuprum alloys" "Textolit", "Plastic", "Titan"
      * 0 = finish cutting (Vc, depth, moveSpeed)
      * 1 = clean cutting (Vc, depth, moveSpeed)
@@ -19,19 +20,8 @@ public class Calculator {
             {{395, 0.4, 0.2}, {2000, 3, 0.2}, {150, 0.2, 0.1}, {250, 0.4, 0.2}, {400, 0.5, 0.2}, {120, 1, 0.05}, {2000, 1, 0.2}, {65, 1, 0.2}},
             {{325, 3, 0.3}, {1900, 3, 0.35}, {150, 0.2, 0.1}, {180, 3, 0.3}, {300, 3, 0.3}, {120, 2, 0.2}, {1500, 3, 0.3}, {53, 2, 0.3}},
             {{290, 4, 0.4}, {1900, 3, 0.35}, {100, 0.2, 0.15}, {165, 3, 0.35}, {300, 3, 0.3}, {100, 2, 0.2}, {1500, 5, 0.5}, {53, 2, 0.3}},
-            {{260, 5, 0.5}, {1300, 3, 0.6}, {100, 0.2, 0.15}, {135, 5, 0.5}, {270, 5, 0.5}, {100, 4, 0.25}, {1000, 5, 0.5}, {49, 4, 0.4}}
+            {{260, 5, 0.5}, {1300, 3, 0.6}, {100, 0.2, 0.15}, {135, 4, 0.5}, {270, 5, 0.5}, {100, 4, 0.25}, {1000, 5, 0.5}, {49, 4, 0.4}}
     };
-
-    private final double[][][] Vc_boring = new double[][][]{
-            {{430, 0.5, 0.12}, {2000, 3, 0.2}, {150, 0.2, 0.1}, {250, 0.4, 0.2}, {400, 0.5, 0.2}, {120, 1, 0.05}, {2000, 1, 0.2}, {65, 1, 0.2}},
-            {{395, 0.4, 0.2}, {2000, 3, 0.2}, {150, 0.2, 0.1}, {250, 0.4, 0.2}, {400, 0.5, 0.2}, {120, 1, 0.05}, {2000, 1, 0.2}, {65, 1, 0.2}},
-            {{325, 3, 0.3}, {1900, 3, 0.35}, {150, 0.2, 0.1}, {180, 3, 0.3}, {300, 3, 0.3}, {120, 2, 0.2}, {1500, 3, 0.3}, {53, 2, 0.3}},
-            {{290, 4, 0.4}, {1900, 3, 0.35}, {100, 0.2, 0.15}, {165, 3, 0.35}, {300, 3, 0.3}, {100, 2, 0.2}, {1500, 5, 0.5}, {53, 2, 0.3}},
-            {{260, 5, 0.5}, {1300, 3, 0.6}, {100, 0.2, 0.15}, {135, 5, 0.5}, {270, 5, 0.5}, {100, 4, 0.25}, {1000, 5, 0.5}, {49, 4, 0.4}}
-    };
-
-    private final double[][][] Vc_segment = new double[][][]{};//-30% turning
-
 
     private final double[][][] Vc_threading = new double[][][]{
             {{115, 0.5, 0.12}, {1000, 3, 0.2}, {50, 0.2, 0.1}, {120, 0.4, 0.2}, {90, 0.5, 0.2}, {120, 1, 0.05}, {2000, 1, 0.2}, {100, 1, 0.2}},
@@ -41,11 +31,27 @@ public class Calculator {
             {{70, 5, 0.5}, {1000, 3, 0.6}, {30, 0.2, 0.15}, {50, 5, 0.5}, {90, 5, 0.5}, {100, 4, 0.25}, {1000, 5, 0.5}, {100, 4, 0.4}}
     };
 
-    private final int[] Vc_groove = new int[]{};//-30% turning
+    /**
+     * drilling
+     * "Steel", "Aluminium alloys", "Hard steel", "Stainless steel","Cuprum alloys" "Textolit", "Plastic", "Titan"
+     * 0 = finish cutting (Vc, moveSpeed)
+     * 1 = clean cutting (Vc, moveSpeed)
+     * 2 = semi clean cutting (Vc, moveSpeed)
+     * 3 = hard cutting (Vc, moveSpeed)
+     * 4 = hardest cutting (Vc, moveSpeed)
+     */
 
-    private final int[] Vc_drilling = new int[]{};
+
+    private final double[][][] Vc_drilling = new double[][][]{
+            {{300, 0.1}, {700, 0.1}, {16, 0.07}, {230, 0.1}, {350, 0.1}, {120, 1}, {2000, 1}, {100, 0.1}},
+            {{300, 0.1}, {700, 0.2}, {16, 0.07}, {230, 0.1}, {350, 0.1}, {120, 1}, {2000, 1}, {100, 0.1}},
+            {{250, 0.2}, {590, 0.2}, {10, 0.1}, {190, 0.2}, {300, 0.2}, {120, 2}, {1500, 3}, {95, 0.2}},
+            {{250, 0.2}, {590, 0.2}, {10, 0.1}, {190, 0.2}, {300, 0.2}, {100, 2}, {1500, 5}, {95, 0.2}},
+            {{200, 0.3}, {590, 0.2}, {10, 0.1}, {155, 0.3}, {300, 0.2}, {100, 4}, {1000, 5}, {95, 0.2}}
+    };
 
     /**
+     * milling
      * "Steel", "Aluminium alloys", "Hard steel", "Stainless steel","Cuprum alloys" "Textolit", "Plastic", "Titan"
      * 0 = finish cutting (Vc, moveSpeed by one tooth, depth)
      * 1 = clean cutting (Vc, moveSpeed by one tooth, depth)
@@ -69,14 +75,13 @@ public class Calculator {
     private WindowController controller;
 
 
-
     public void compute(Data data) {
         if (data.getCuttingType().equals("Turning")) {
-            controller.outputWindow(computeTurning(data));
+            controller.outputWindow(String.format("%.2f", computeTurning(data)));
         } else if (data.getCuttingType().equals("Milling")) {
-            controller.outputWindow(computeMilling(data));
+            controller.outputWindow(String.format("%.2f", computeMilling(data)));
         } else {
-            controller.outputWindow(computeDrilling(data));
+            controller.outputWindow(String.format("%.2f", computeDrilling(data)));
         }
     }
 
@@ -95,54 +100,66 @@ public class Calculator {
         if (data.getToolType().equals("Turning out") || data.getToolType().equals("Boring")) {
             while (depth > 5) {
                 double Vc = Vc_turning[4][column][0];
-                result += data.getLength() / Vc_turning[4][column][2] / spinCount(Vc, data.getDiameter()) + Tpz ;
-                depth -= 5;
+                result += calculateTime(data.getLength(), Vc_turning[4][column][2],
+                        spinCount(Vc, data.getDiameter())) + Tpz;
+                depth -= Vc_turning[4][column][1];
             }
-            double changeTool = 1;
+            double changeTool = 0.5;
             result += changeTool;
             double Vc1 = Vc_turning[3][column][0];
             double Vc2 = Vc_turning[2][column][0];
             double Vc3 = Vc_turning[1][column][0];
             double Vc4 = Vc_turning[0][column][0];
-            result += data.getLength() / Vc_turning[3][column][2] / spinCount(Vc1, data.getDiameter()) + Tpz;
-            result += data.getLength() / Vc_turning[2][column][2] / spinCount(Vc2, data.getDiameter()) + Tpz;
+            result += calculateTime(data.getLength(), Vc_turning[3][column][2],
+                    spinCount(Vc1, data.getDiameter())) + Tpz;
+            result += calculateTime(data.getLength(), Vc_turning[2][column][2],
+                    spinCount(Vc2, data.getDiameter())) + Tpz;
             if (data.getQualitat() <= 10) {
-                result += data.getLength() / Vc_turning[1][column][2] / spinCount(Vc3, data.getDiameter()) + Tpz;
+                result += calculateTime(data.getLength(), Vc_turning[1][column][2],
+                        spinCount(Vc3, data.getDiameter())) + Tpz;
             }
             if (data.getQualitat() <= 8) {
-                result += data.getLength() / Vc_turning[0][column][2] / spinCount(Vc4, data.getDiameter()) + Tpz;
+                result += calculateTime(data.getLength(), Vc_turning[0][column][2],
+                        spinCount(Vc4, data.getDiameter())) + Tpz;
             }
         } else if (data.getToolType().equals("Groove")) {
             while (depth > 5) {
                 double Vc = grooveFactor(Vc_turning[4][column][0]);
-                result += result += data.getLength() /
-                        grooveFactor(Vc_turning[4][column][2]) / spinCount(Vc, data.getDiameter());
-                depth -= 5;
+                result += calculateTime(data.getLength(), grooveFactor(Vc_turning[4][column][2]),
+                        spinCount(Vc, data.getDiameter())) + Tpz;
+                depth -= Vc_turning[4][column][1];
             }
+            double changeTool = 0.5;
+            result += changeTool;
             double Vc1 = grooveFactor(Vc_turning[3][column][0]);
             double Vc2 = grooveFactor(Vc_turning[2][column][0]);
             double Vc3 = grooveFactor(Vc_turning[1][column][0]);
             double Vc4 = grooveFactor(Vc_turning[0][column][0]);
-            result += data.getLength() / grooveFactor(Vc_turning[3][column][2]) / spinCount(Vc1, data.getDiameter());
-            result += data.getLength() / grooveFactor(Vc_turning[2][column][2]) / spinCount(Vc2, data.getDiameter());
+            result += calculateTime(data.getLength(), grooveFactor(Vc_turning[3][column][2]),
+                    spinCount(Vc1, data.getDiameter())) + Tpz;
+            result += calculateTime(data.getLength(), grooveFactor(Vc_turning[3][column][2]),
+                    spinCount(Vc2, data.getDiameter())) + Tpz;
             if (data.getQualitat() <= 10) {
-                result += data.getLength() / grooveFactor(Vc_turning[1][column][2]) / spinCount(Vc3, data.getDiameter());
+                result += calculateTime(data.getLength(), grooveFactor(Vc_turning[1][column][2]),
+                        spinCount(Vc3, data.getDiameter())) + Tpz;
             }
             if (data.getQualitat() <= 8) {
-                result += data.getLength() / grooveFactor(Vc_turning[0][column][2]) / spinCount(Vc4, data.getDiameter());
+                result += calculateTime(data.getLength(), grooveFactor(Vc_turning[4][column][2]),
+                        spinCount(Vc4, data.getDiameter())) + Tpz;
             }
         } else if (data.getToolType().equals("Segment")) {
-            double Vc = grooveFactor(Vc_turning[1][column][0]);
-            result += data.getDepth() / grooveFactor(Vc_turning[1][column][2] / spinCount(Vc, data.getDiameter()));
+            double Vc = grooveFactor(Vc_turning[3][column][0]);
+            result += calculateTime(data.getDepth(),grooveFactor(Vc_turning[2][column][2]),
+                    spinCount(Vc, data.getDiameter())) + Tpz;
         } else if (data.getToolType().equals("Threading")) {
-            double Vc = Vc_threading[3][column][0];
-            result += data.getDepth()/ data.getThreadStep() / spinCount(Vc, data.getDiameter());
+            double Vc = Vc_threading[4][column][0];
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc, data.getDiameter())) + Tpz;
             double Vc1 = Vc_threading[2][column][0];
-            result += data.getDepth()/ data.getThreadStep() / spinCount(Vc1, data.getDiameter());
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc1, data.getDiameter())) + Tpz;
             double Vc3 = Vc_threading[1][column][0];
-            result += (data.getDepth()/ data.getThreadStep() / spinCount(Vc3, data.getDiameter())) * 6;
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc3, data.getDiameter())) * 8 + Tpz;
         }
-        result += data.getChamfersCount();
+        result += (double)data.getChamfersCount() / 2;
         return result;
     }
 
@@ -152,16 +169,20 @@ public class Calculator {
     }
 
     public double computeDrilling(Data data) {
-        double D_ = 0;
+
         return 0;
     }
 
+    public double calculateTime(double length, double x, double spinCount) {
+        return (length / x) / spinCount;
+    }
+
     public double grooveFactor(double number) {
-        return number / 100 * 30;
+        return number -  (number / 100) * 25;
     }
 
     public double spinCount(double Vc, double diameter) {
-        return 1000 * Vc / Math.PI * diameter;
+        return (1000 * Vc) / (Math.PI * diameter);
     }
 
     public void setController(WindowController controller) {
