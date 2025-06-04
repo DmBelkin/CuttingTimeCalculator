@@ -26,6 +26,8 @@ public class Data {
 
     private int Zcount;
 
+    private boolean isHSS;
+
 
 
     public Data(){}
@@ -57,6 +59,15 @@ public class Data {
         this.Zcount = 0;
         this.qualitat = 0;
     }
+
+    public boolean isHSS() {
+        return isHSS;
+    }
+
+    public void setHSS(boolean HSS) {
+        isHSS = HSS;
+    }
+
 
     public double getBladeWidth() {
         return bladeWidth;
@@ -178,6 +189,7 @@ public class Data {
                 ", bladeWidth=" + bladeWidth +
                 ", qualitat=" + qualitat +
                 ", Z-count=" + Zcount +
+                ", isHSS=" + isHSS +
                 '}';
     }
 

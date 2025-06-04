@@ -51,6 +51,8 @@ public class WindowController implements ActionListener {
 
     private JTextField output;
 
+    private JToggleButton isHSS;
+
 
     public WindowController() {
         frame = new JFrame();
@@ -75,6 +77,9 @@ public class WindowController implements ActionListener {
             if (e.getSource() == control[i]) {
                 getAction(control[i].getText());
             }
+        }
+        if (e.getSource().equals("HSS")) {
+            isHSS.setSelected(true);
         }
     }
 
@@ -120,14 +125,16 @@ public class WindowController implements ActionListener {
         } else if (text.equals("Submit")) {
             String p1 = drillingFields[0].getText();
             String p2 = drillingFields[1].getText();
+            if (isHSS.isSelected()) {
+                data.setHSS(true);
+            }
             if (validNumbers(p1) && validNumbers(p2)) {
                 data.setDiameter(Double.parseDouble(p1));
                 data.setDepth(Double.parseDouble(p2));
-                calculator.compute(data);
+                materialsMatrixPanel();
             } else {
                 output.setText("Incorrect input");
             }
-            materialsMatrixPanel();
         } else if (text.equals("Go")) {
             if (data.getToolType().equals("Segment")) {
                 String p3 = segmentTurningFields[0].getText();
@@ -187,7 +194,9 @@ public class WindowController implements ActionListener {
             }
         } else {
             data.setMaterial(text);
-            if (data.getToolType().equals("Segment")) {
+            if (data.getCuttingType().equals("Drilling")){
+                calculator.compute(data);
+            } else if (data.getToolType().equals("Segment")) {
                 segmentTurningParametersPanel();
             } else if (data.getToolType().equals("Threading")) {
                 threadTurningParametersPanel();
@@ -195,8 +204,6 @@ public class WindowController implements ActionListener {
                 turningParametersWindow();
             } else if (data.getCuttingType().equals("Milling")) {
                 millingParametersWindow();
-            } else if (data.getCuttingType().equals("Drilling")){
-                calculator.compute(data);
             }
         }
         System.out.println(data);
@@ -356,16 +363,19 @@ public class WindowController implements ActionListener {
 
     public void drillingWindow() {
         drillingFields = new JTextField[2];
-        JButton[] buttons = new JButton[7];
-        String[] types = new String[]{"", "", "", "", "", "Submit", "Back"};
+        JButton[] buttons = new JButton[6];
+        isHSS = new JToggleButton();
+        String[] types = new String[]{"", "", "", "", "Submit", "Back"};
         drilling = new JPanel();
+        isHSS.setText("HSS");
         drilling.setLayout(new GridLayout(3, 3));
         drilling.setBackground(new Color(200, 200, 200));
         drillingFields[0] = createTextField("Diameter");
         drilling.add(drillingFields[0]);
         drillingFields[1] = createTextField("Length");
         drilling.add(drillingFields[1]);
-        for (int i = 0; i < 7; i++) {
+        drilling.add(isHSS);
+        for (int i = 0; i < 6; i++) {
             buttons[i] = createButton(types[i]);
             drilling.add(buttons[i]);
         }

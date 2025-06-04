@@ -1,4 +1,5 @@
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public class Calculator {
 
@@ -34,20 +35,18 @@ public class Calculator {
     /**
      * drilling
      * "Steel", "Aluminium alloys", "Hard steel", "Stainless steel","Cuprum alloys" "Textolit", "Plastic", "Titan"
-     * 0 = finish cutting (Vc, moveSpeed)
-     * 1 = clean cutting (Vc, moveSpeed)
-     * 2 = semi clean cutting (Vc, moveSpeed)
-     * 3 = hard cutting (Vc, moveSpeed)
-     * 4 = hardest cutting (Vc, moveSpeed)
+     * 0 = diameters 1 - 26 (Vc, moveSpeed)
+     * 1 = diameters 26 - 33 (Vc, moveSpeed)
+     * 2 = diameters 33 - 43 (Vc, moveSpeed)
+     * 3 = diameters 43 - 58 (Vc, moveSpeed)
      */
 
 
     private final double[][][] Vc_drilling = new double[][][]{
-            {{300, 0.1}, {700, 0.1}, {16, 0.07}, {230, 0.1}, {350, 0.1}, {120, 1}, {2000, 1}, {100, 0.1}},
-            {{300, 0.1}, {700, 0.2}, {16, 0.07}, {230, 0.1}, {350, 0.1}, {120, 1}, {2000, 1}, {100, 0.1}},
-            {{250, 0.2}, {590, 0.2}, {10, 0.1}, {190, 0.2}, {300, 0.2}, {120, 2}, {1500, 3}, {95, 0.2}},
-            {{250, 0.2}, {590, 0.2}, {10, 0.1}, {190, 0.2}, {300, 0.2}, {100, 2}, {1500, 5}, {95, 0.2}},
-            {{200, 0.3}, {590, 0.2}, {10, 0.1}, {155, 0.3}, {300, 0.2}, {100, 4}, {1000, 5}, {95, 0.2}}
+            {{160, 0.06}, {300, 0.12}, {100, 0.08}, {120, 0.1}, {200, 0.14}, {120, 0.1}, {300, 0.12}, {80, 0.06}},
+            {{160, 0.08}, {300, 0.16}, {100, 0.12}, {120, 0.16}, {200, 0.16}, {120, 0.16}, {300, 0.16}, {80, 0.08}},
+            {{160, 0.1}, {300, 0.2}, {100, 0.16}, {120, 0.19}, {200, 0.2}, {120, 0.19}, {300, 0.2}, {80, 0.1}},
+            {{160, 0.2}, {300, 0.25}, {100, 0.18}, {120, 0.22}, {200, 0.25}, {100, 0.22}, {300, 0.25}, {80, 0.12}},
     };
 
     /**
@@ -89,13 +88,7 @@ public class Calculator {
     public double computeTurning(Data data) {
         double Tpz = 0.5;
         double result = 0;
-        int column = 0;
-        for (int i = 0; i < materials.length; i++) {
-            if (materials[i].equals(data.getMaterial())) {
-                column = i;
-                break;
-            }
-        }
+        int column = getMaterial(data.getMaterial());
         double depth = data.getDepth();
         if (data.getToolType().equals("Turning out") || data.getToolType().equals("Boring")) {
             while (depth > 5) {
@@ -159,7 +152,7 @@ public class Calculator {
             double Vc3 = Vc_threading[1][column][0];
             result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc3, data.getDiameter())) * 8 + Tpz;
         }
-        result += (double)data.getChamfersCount() / 2;
+        result += data.getChamfersCount();
         return result;
     }
 
@@ -169,8 +162,36 @@ public class Calculator {
     }
 
     public double computeDrilling(Data data) {
+        double Tpz = 0.5;
+        int column = getMaterial(data.getMaterial());
+        double depth = data.getDepth();
+        double[] params = null;
+        if (data.getDiameter() <= 26) {
+            params = Vc_drilling[0][column];
+        } else if (data.getDiameter() > 26 && data.getDiameter() <= 33) {
+            params = Vc_drilling[1][column];
+        } else if (data.getDiameter() > 33 && data.getDiameter() <= 43) {
+            params = Vc_drilling[2][column];
+        } else if (data.getDiameter() > 43) {
+            params = Vc_drilling[3][column];
+        }
+        double Vc = params[0];
+        if (data.isHSS()) {
+            Vc /= 4;
+        }
+        double spin = spinCount(Vc, data.getDiameter());
+        return calculateTime(depth, params[1], spin) + Tpz;
+    }
 
-        return 0;
+    public int getMaterial(String material) {
+        int column = 0;
+        for (int i = 0; i < materials.length; i++) {
+            if (materials[i].equals(material)) {
+                column = i;
+                break;
+            }
+        }
+        return column;
     }
 
     public double calculateTime(double length, double x, double spinCount) {
