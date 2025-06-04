@@ -53,6 +53,8 @@ public class WindowController implements ActionListener {
 
     private JToggleButton isHSS;
 
+    private JToggleButton isCPU;
+
 
     public WindowController() {
         frame = new JFrame();
@@ -68,18 +70,36 @@ public class WindowController implements ActionListener {
         calculator = new Calculator();
         calculator.setController(this);
         data = new Data();
+        isCPU = new JToggleButton("CNC");
+        isCPU.addActionListener(this);
+        isHSS = new JToggleButton();
+        isHSS.setText("HSS");
+        isHSS.addActionListener(this);
         mainPage();
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == isHSS) {
+            isHSS.setSelected(true);
+            data.setHSS(true);
+            return;
+        }
+        if (e.getSource() == isCPU && !data.isCPU()) {
+            isCPU.setSelected(true);
+            data.setCPU(true);
+            return;
+        }
+        if (e.getSource() == isCPU && data.isCPU()) {
+            isCPU.setSelected(false);
+            data.setCPU(false);
+            return;
+        }
         for (int i = 0; i < control.length; i++) {
             if (e.getSource() == control[i]) {
                 getAction(control[i].getText());
             }
-        }
-        if (e.getSource().equals("HSS")) {
-            isHSS.setSelected(true);
         }
     }
 
@@ -125,9 +145,6 @@ public class WindowController implements ActionListener {
         } else if (text.equals("Submit")) {
             String p1 = drillingFields[0].getText();
             String p2 = drillingFields[1].getText();
-            if (isHSS.isSelected()) {
-                data.setHSS(true);
-            }
             if (validNumbers(p1) && validNumbers(p2)) {
                 data.setDiameter(Double.parseDouble(p1));
                 data.setDepth(Double.parseDouble(p2));
@@ -246,6 +263,10 @@ public class WindowController implements ActionListener {
         frame.remove(oldPanel);
         data.reset();
         output.setText("0.0");
+        isCPU.setSelected(false);
+        isHSS.setSelected(false);
+        data.setCPU(false);
+        data.setHSS(false);
         mainPage();
     }
 
@@ -293,8 +314,8 @@ public class WindowController implements ActionListener {
 
     public void segmentTurningParametersPanel() {
         segmentTurningFields = new JTextField[3];
-        JButton[] buttons = new JButton[6];
-        String[] types = new String[]{"", "", "", "", "Go", "Back"};
+        JButton[] buttons = new JButton[5];
+        String[] types = new String[]{"", "", "", "Go", "Back"};
         segmentTurningParameters = new JPanel();
         segmentTurningParameters.setLayout(new GridLayout(3, 3));
         segmentTurningParameters.setBackground(new Color(200, 200, 200));
@@ -304,7 +325,8 @@ public class WindowController implements ActionListener {
         segmentTurningParameters.add(segmentTurningFields[1]);
         segmentTurningFields[2] = createTextField("Diameter");
         segmentTurningParameters.add(segmentTurningFields[2]);
-        for (int i = 0; i < 6; i++) {
+        segmentTurningParameters.add(isCPU);
+        for (int i = 0; i < 5; i++) {
             buttons[i] = createButton(types[i]);
             segmentTurningParameters.add(buttons[i]);
         }
@@ -316,8 +338,8 @@ public class WindowController implements ActionListener {
 
     public void threadTurningParametersPanel() {
         threadTurningFields = new JTextField[3];
-        JButton[] buttons = new JButton[6];
-        String[] types = new String[]{"", "", "", "", "Go", "Back"};
+        JButton[] buttons = new JButton[5];
+        String[] types = new String[]{"", "", "", "Go", "Back"};
         threadTurningParameters = new JPanel();
         threadTurningParameters.setLayout(new GridLayout(3, 3));
         threadTurningParameters.setBackground(new Color(200, 200, 200));
@@ -327,7 +349,8 @@ public class WindowController implements ActionListener {
         threadTurningParameters.add(threadTurningFields[1]);
         threadTurningFields[2] = createTextField("Length");
         threadTurningParameters.add(threadTurningFields[2]);
-        for (int i = 0; i < 6; i++) {
+        threadTurningParameters.add(isCPU);
+        for (int i = 0; i < 5; i++) {
             buttons[i] = createButton(types[i]);
             threadTurningParameters.add(buttons[i]);
         }
@@ -364,10 +387,8 @@ public class WindowController implements ActionListener {
     public void drillingWindow() {
         drillingFields = new JTextField[2];
         JButton[] buttons = new JButton[6];
-        isHSS = new JToggleButton();
         String[] types = new String[]{"", "", "", "", "Submit", "Back"};
         drilling = new JPanel();
-        isHSS.setText("HSS");
         drilling.setLayout(new GridLayout(3, 3));
         drilling.setBackground(new Color(200, 200, 200));
         drillingFields[0] = createTextField("Diameter");
@@ -430,8 +451,8 @@ public class WindowController implements ActionListener {
 
     public void turningParametersWindow() {
         turningFields = new JTextField[5];
-        JButton[] buttons = new JButton[4];
-        String[] types = new String[]{"", "", "Go", "Back"};
+        JButton[] buttons = new JButton[3];
+        String[] types = new String[]{ "", "Go", "Back"};
         turningParameters = new JPanel();
         turningParameters.setLayout(new GridLayout(3, 3));
         turningParameters.setBackground(new Color(200, 200, 200));
@@ -445,7 +466,8 @@ public class WindowController implements ActionListener {
         turningParameters.add(turningFields[3]);
         turningFields[4] = createTextField("Qualitat");
         turningParameters.add(turningFields[4]);
-        for (int i = 0; i < 4; i++) {
+        turningParameters.add(isCPU);
+        for (int i = 0; i < 3; i++) {
             buttons[i] = createButton(types[i]);
             turningParameters.add(buttons[i]);
         }

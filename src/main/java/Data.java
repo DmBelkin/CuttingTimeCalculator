@@ -28,6 +28,7 @@ public class Data {
 
     private boolean isHSS;
 
+    private boolean isCPU;
 
 
     public Data(){}
@@ -66,6 +67,14 @@ public class Data {
 
     public void setHSS(boolean HSS) {
         isHSS = HSS;
+    }
+
+    public boolean isCPU() {
+        return isCPU;
+    }
+
+    public void setCPU(boolean CPU) {
+        isCPU = CPU;
     }
 
 
@@ -190,6 +199,7 @@ public class Data {
                 ", qualitat=" + qualitat +
                 ", Z-count=" + Zcount +
                 ", isHSS=" + isHSS +
+                ", isCPU=" + isCPU +
                 '}';
     }
 

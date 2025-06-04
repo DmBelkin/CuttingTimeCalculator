@@ -153,6 +153,9 @@ public class Calculator {
             result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc3, data.getDiameter())) * 8 + Tpz;
         }
         result += data.getChamfersCount();
+        if (!data.isCPU()) {
+            result *= 2;
+        }
         return result;
     }
 
