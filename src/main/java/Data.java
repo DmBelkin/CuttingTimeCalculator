@@ -26,26 +26,11 @@ public class Data {
 
     private int Zcount;
 
+    private int millDiameter;
+
     private boolean isHSS;
 
     private boolean isCPU;
-
-
-    public Data(){}
-
-
-    public Data(String cuttingType, String toolType,
-                double diameter, double length,
-                String material, double square,
-                double depth) {
-        this.cuttingType = cuttingType;
-        this.toolType = toolType;
-        this.diameter = diameter;
-        this.length = length;
-        this.material = material;
-        this.square = square;
-        this.depth = depth;
-    }
 
     public void reset() {
         this.cuttingType = "";
@@ -75,6 +60,14 @@ public class Data {
 
     public void setCPU(boolean CPU) {
         isCPU = CPU;
+    }
+
+    public int getMillDiameter() {
+        return millDiameter;
+    }
+
+    public void setMillDiameter(int millDiameter) {
+        this.millDiameter = millDiameter;
     }
 
 
@@ -200,6 +193,7 @@ public class Data {
                 ", Z-count=" + Zcount +
                 ", isHSS=" + isHSS +
                 ", isCPU=" + isCPU +
+                ", millDiameter=" + millDiameter +
                 '}';
     }
 

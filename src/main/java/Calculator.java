@@ -91,7 +91,7 @@ public class Calculator {
         int column = getMaterial(data.getMaterial());
         double depth = data.getDepth();
         if (data.getToolType().equals("Turning out") || data.getToolType().equals("Boring")) {
-            while (depth > 5) {
+            while (depth > Vc_turning[4][column][1]) {
                 double Vc = Vc_turning[4][column][0];
                 result += calculateTime(data.getLength(), Vc_turning[4][column][2],
                         spinCount(Vc, data.getDiameter())) + Tpz;
@@ -116,7 +116,7 @@ public class Calculator {
                         spinCount(Vc4, data.getDiameter())) + Tpz;
             }
         } else if (data.getToolType().equals("Groove")) {
-            while (depth > 5) {
+            while (depth > Vc_turning[4][column][1]) {
                 double Vc = grooveFactor(Vc_turning[4][column][0]);
                 result += calculateTime(data.getLength(), grooveFactor(Vc_turning[4][column][2]),
                         spinCount(Vc, data.getDiameter())) + Tpz;
@@ -161,7 +161,45 @@ public class Calculator {
 
 
     public double computeMilling(Data data) {
-        return 0;
+        double Tpz = 0.5;
+        int column = getMaterial(data.getMaterial());
+        double result = 0;
+        double changeTool = 1;
+        double V = data.getSquare() * data.getDepth();
+        double spin1 = spinCount(Vc_end_milling[4][column][0], data.getMillDiameter());
+        double spin2 = spinCount(Vc_end_milling[3][column][0], data.getMillDiameter());
+        double spin3 = spinCount(Vc_end_milling[2][column][0], data.getMillDiameter());
+        double spin4 = spinCount(Vc_end_milling[1][column][0], data.getMillDiameter());
+        double spin5 = spinCount(Vc_end_milling[0][column][0], data.getMillDiameter());
+        double oneRowV = (double)(data.getMillDiameter() / 4) * Vc_end_milling[4][column][2] * data.getDepth();
+        double oneRowTime = calculateTime(data.getDepth(), data.getZcount() * Vc_end_milling[4][column][1],
+                spin1) + Tpz;
+        double preMilling = (((V / 100) * 90) / oneRowV) * oneRowTime;
+        double oneRowV1 = (double)(data.getMillDiameter() / 6) * Vc_end_milling[2][column][2] * data.getDepth();
+        double oneRowTime1 = calculateTime(data.getDepth(), data.getZcount() * Vc_end_milling[2][column][1],
+        spin3) + Tpz;
+        double cleanMilling = (((V / 100) * 10) / oneRowV1) * oneRowTime1;
+        double oneRowV2 = (double)(data.getMillDiameter() / 8) * Vc_end_milling[1][column][2] * data.getDepth();
+        double oneRowTime2 = calculateTime(data.getDepth(), data.getZcount() * Vc_end_milling[1][column][1],
+        spin4) + Tpz;
+        double preFinishMilling = (((V / 100) * 5) / oneRowV1) * oneRowTime1;
+        double finisMilling = (((V / 100) * 5) / oneRowV2) * oneRowTime2;
+        if (data.getQualitat() >= 14) {
+            result += preMilling;
+        } else if (data.getQualitat() < 14 && data.getQualitat() >= 10) {
+            result += preMilling;
+            result += changeTool;
+            result += cleanMilling;
+        } else if (data.getQualitat() < 10) {
+            result += preMilling;
+            result += preFinishMilling;
+            result += changeTool;
+            result += finisMilling;
+        }
+        if (!data.isCPU()) {
+            result *= 2;
+        }
+        return result;
     }
 
     public double computeDrilling(Data data) {

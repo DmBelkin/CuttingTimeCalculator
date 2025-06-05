@@ -72,8 +72,7 @@ public class WindowController implements ActionListener {
         data = new Data();
         isCPU = new JToggleButton("CNC");
         isCPU.addActionListener(this);
-        isHSS = new JToggleButton();
-        isHSS.setText("HSS");
+        isHSS = new JToggleButton("HSS");
         isHSS.addActionListener(this);
         mainPage();
     }
@@ -199,11 +198,13 @@ public class WindowController implements ActionListener {
                 String p2 = millingFields[1].getText();
                 String p3 = millingFields[2].getText();
                 String p4 = millingFields[3].getText();
-                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4)) {
+                String p5 = millingFields[4].getText();
+                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
                     data.setSquare(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
                     data.setQualitat(Integer.parseInt(p3));
                     data.setZcount(Integer.parseInt(p4));
+                    data.setMillDiameter(Integer.parseInt(p5));
                     calculator.compute(data);
                 } else {
                     output.setText("Incorrect input");
@@ -425,9 +426,9 @@ public class WindowController implements ActionListener {
     }
 
     public void millingParametersWindow() {
-        millingFields = new JTextField[4];
-        JButton[] buttons = new JButton[5];
-        String[] types = new String[]{"", "", "", "Go", "Back"};
+        millingFields = new JTextField[5];
+        JButton[] buttons = new JButton[3];
+        String[] types = new String[]{"", "Go", "Back"};
         millingParameters = new JPanel();
         millingParameters.setLayout(new GridLayout(3, 3));
         millingParameters.setBackground(new Color(200, 200, 200));
@@ -439,7 +440,10 @@ public class WindowController implements ActionListener {
         millingParameters.add(millingFields[2]);
         millingFields[3] = createTextField("Z-count");
         millingParameters.add(millingFields[3]);
-        for (int i = 0; i < 5; i++) {
+        millingFields[4] = createTextField("Mill D");
+        millingParameters.add(millingFields[4]);
+        millingParameters.add(isCPU);
+        for (int i = 0; i < 3; i++) {
             buttons[i] = createButton(types[i]);
             millingParameters.add(buttons[i]);
         }
