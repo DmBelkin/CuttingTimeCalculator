@@ -32,6 +32,8 @@ public class Data {
 
     private boolean isCPU;
 
+    private double millWidth;
+
     public void reset() {
         this.cuttingType = "";
         this.toolType = "";
@@ -44,6 +46,9 @@ public class Data {
         this.threadStep = 0;
         this.Zcount = 0;
         this.qualitat = 0;
+        this.millWidth = 0;
+        this.millDiameter = 0;
+        this.segmentGrooveWidth = 0;
     }
 
     public boolean isHSS() {
@@ -70,7 +75,13 @@ public class Data {
         this.millDiameter = millDiameter;
     }
 
+    public double getMillWidth() {
+        return millWidth;
+    }
 
+    public void setMillWidth(double millWidth) {
+        this.millWidth = millWidth;
+    }
     public double getBladeWidth() {
         return bladeWidth;
     }
@@ -194,6 +205,7 @@ public class Data {
                 ", isHSS=" + isHSS +
                 ", isCPU=" + isCPU +
                 ", millDiameter=" + millDiameter +
+                ", millWidth=" + millWidth +
                 '}';
     }
 

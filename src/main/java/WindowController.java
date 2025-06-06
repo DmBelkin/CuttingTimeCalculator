@@ -194,25 +194,48 @@ public class WindowController implements ActionListener {
                     output.setText("Incorrect input");
                 }
             } else if (data.getCuttingType().equals("Milling")) {
-                String p1 = millingFields[0].getText();
-                String p2 = millingFields[1].getText();
-                String p3 = millingFields[2].getText();
-                String p4 = millingFields[3].getText();
-                String p5 = millingFields[4].getText();
-                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
-                    data.setSquare(Double.parseDouble(p1));
-                    data.setDepth(Double.parseDouble(p2));
-                    data.setQualitat(Integer.parseInt(p3));
-                    data.setZcount(Integer.parseInt(p4));
-                    data.setMillDiameter(Integer.parseInt(p5));
-                    calculator.compute(data);
+                if (data.getToolType().equals("Disk milling")) {
+                    String p1 = millingFields[0].getText();
+                    String p2 = millingFields[1].getText();
+                    String p3 = millingFields[2].getText();
+                    String p4 = millingFields[3].getText();
+                    String p5 = millingFields[4].getText();
+                    String p6 = millingFields[5].getText();
+                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
+                    && validNumbers(p6)) {
+                        data.setLength(Double.parseDouble(p1));
+                        data.setDepth(Double.parseDouble(p2));
+                        data.setBladeWidth(Integer.parseInt(p3));
+                        data.setZcount(Integer.parseInt(p4));
+                        data.setMillDiameter(Integer.parseInt(p5));
+                        data.setMillWidth(Double.parseDouble(p6));
+                        calculator.compute(data);
+                    } else {
+                        output.setText("Incorrect input");
+                    }
                 } else {
-                    output.setText("Incorrect input");
+                    String p1 = millingFields[0].getText();
+                    String p2 = millingFields[1].getText();
+                    String p3 = millingFields[2].getText();
+                    String p4 = millingFields[3].getText();
+                    String p5 = millingFields[4].getText();
+                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
+                        data.setSquare(Double.parseDouble(p1));
+                        data.setDepth(Double.parseDouble(p2));
+                        data.setQualitat(Integer.parseInt(p3));
+                        data.setZcount(Integer.parseInt(p4));
+                        data.setMillDiameter(Integer.parseInt(p5));
+                        calculator.compute(data);
+                    } else {
+                        output.setText("Incorrect input");
+                    }
                 }
             }
         } else {
             data.setMaterial(text);
-            if (data.getCuttingType().equals("Drilling")){
+            if (data.getToolType().equals("Disk milling")) {
+                discMillingParametersPanel();
+            } else if (data.getCuttingType().equals("Drilling")){
                 calculator.compute(data);
             } else if (data.getToolType().equals("Segment")) {
                 segmentTurningParametersPanel();
@@ -362,10 +385,33 @@ public class WindowController implements ActionListener {
     }
 
     public void discMillingParametersPanel() {
-        /**
-         * TODO
-         * write panel to user input with depth/length, width mill
-         */
+        millingFields = new JTextField[6];
+        JButton[] buttons = new JButton[3];
+        String[] types = new String[]{"Go", "Back"};
+        millingParameters = new JPanel();
+        millingParameters.setLayout(new GridLayout(3, 3));
+        millingParameters.setBackground(new Color(200, 200, 200));
+        millingFields[0] = createTextField("Length");
+        millingParameters.add(millingFields[0]);
+        millingFields[1] = createTextField("Depth");
+        millingParameters.add(millingFields[1]);
+        millingFields[2] = createTextField("Width");
+        millingParameters.add(millingFields[2]);
+        millingFields[3] = createTextField("Z-count");
+        millingParameters.add(millingFields[3]);
+        millingFields[4] = createTextField("Mill D");
+        millingParameters.add(millingFields[4]);
+        millingFields[5] = createTextField("Mill width");
+        millingParameters.add(millingFields[5]);
+        millingParameters.add(isCPU);
+        for (int i = 0; i < 2; i++) {
+            buttons[i] = createButton(types[i]);
+            millingParameters.add(buttons[i]);
+        }
+        control = buttons;
+        frame.remove(last);
+        last = millingParameters;
+        render(millingParameters);
     }
 
 
