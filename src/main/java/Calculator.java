@@ -215,15 +215,15 @@ public class Calculator {
         double spin3 = spinCount(Vc_end_milling[2][column][0], data.getMillDiameter());
         double spin4 = spinCount(Vc_end_milling[1][column][0], data.getMillDiameter());
         double spin5 = spinCount(Vc_end_milling[0][column][0], data.getMillDiameter());
-        double oneRowV = data.getMillWidth() * Vc_end_milling[4][column][2] * data.getDepth();
+        double oneRowV = data.getMillWidth() * Vc_end_milling[4][column][2] * data.getLength();
         double oneRowTime = calculateTime(data.getLength(), data.getZcount() * Vc_end_milling[4][column][1],
                 spin1) + Tpz;
         double preMilling = (((V / 100) * 90) / oneRowV) * oneRowTime;
-        double oneRowV1 = data.getMillWidth() * Vc_end_milling[2][column][2] * data.getDepth();
+        double oneRowV1 = data.getMillWidth() * Vc_end_milling[2][column][2] * data.getLength();
         double oneRowTime1 = calculateTime(data.getLength(), data.getZcount() * Vc_end_milling[2][column][1],
                 spin3) + Tpz;
         double cleanMilling = (((V / 100) * 10) / oneRowV1) * oneRowTime1;
-        double oneRowV2 = data.getMillWidth() * Vc_end_milling[1][column][2] * data.getDepth();
+        double oneRowV2 = data.getMillWidth() * Vc_end_milling[1][column][2] * data.getLength();
         double oneRowTime2 = calculateTime(data.getLength(), data.getZcount() * Vc_end_milling[1][column][1],
                 spin4) + Tpz;
         double preFinishMilling = (((V / 100) * 5) / oneRowV1) * oneRowTime1;
