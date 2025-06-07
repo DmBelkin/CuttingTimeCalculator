@@ -1,7 +1,7 @@
-import java.time.LocalTime;
-import java.util.Arrays;
+
 
 public class Calculator {
+
 
     private final String[] materials = new String[]{"Steel", "Aluminium alloys", "Hard steel", "Stainless steel",
             "Cuprum alloys", "Textolit", "Plastic", "Titan"};
@@ -67,9 +67,6 @@ public class Calculator {
             {{200, 0.3, 3}, {590, 0.2, 5}, {10, 0.1, 2}, {155, 0.3, 2.5}, {300, 0.2, 4}, {100, 4, 0.25}, {1000, 5, 0.5}, {95, 0.2, 2}}
     };
 
-    private final int[] Vc_face_milling = new int[]{};
-
-    private final int[] Vc_disk_milling = new int[]{};
 
     private WindowController controller;
 

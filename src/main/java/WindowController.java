@@ -147,7 +147,11 @@ public class WindowController implements ActionListener {
             if (validNumbers(p1) && validNumbers(p2)) {
                 data.setDiameter(Double.parseDouble(p1));
                 data.setDepth(Double.parseDouble(p2));
-                materialsMatrixPanel();
+                if (!validDTO(data)) {
+                    output.setText("this not may be <= 0");
+                } else {
+                    materialsMatrixPanel();
+                }
             } else {
                 output.setText("Incorrect input");
             }
@@ -160,7 +164,11 @@ public class WindowController implements ActionListener {
                     data.setBladeWidth(Double.parseDouble(p3));
                     data.setDepth(Double.parseDouble(p4));
                     data.setDiameter(Double.parseDouble(p5));
-                    calculator.compute(data);
+                    if (!validDTO(data)) {
+                        output.setText("this not may be <= 0");
+                    } else {
+                        calculator.compute(data);
+                    }
                 } else {
                     output.setText("Incorrect input");
                 }
@@ -172,7 +180,11 @@ public class WindowController implements ActionListener {
                     data.setThreadStep(Double.parseDouble(p2));
                     data.setDiameter(Double.parseDouble(p3));
                     data.setLength(Double.parseDouble(p4));
-                    calculator.compute(data);
+                    if (!validDTO(data)) {
+                        output.setText("this not may be <= 0");
+                    } else {
+                        calculator.compute(data);
+                    }
                 } else {
                     output.setText("Incorrect input");
                 }
@@ -189,7 +201,11 @@ public class WindowController implements ActionListener {
                     data.setLength(Double.parseDouble(p3));
                     data.setChamfersCount(Integer.parseInt(p4));
                     data.setQualitat(Integer.parseInt(p5));
-                    calculator.compute(data);
+                    if (!validDTO(data)) {
+                        output.setText("this not may be <= 0");
+                    } else {
+                        calculator.compute(data);
+                    }
                 } else {
                     output.setText("Incorrect input");
                 }
@@ -209,7 +225,11 @@ public class WindowController implements ActionListener {
                         data.setZcount(Integer.parseInt(p4));
                         data.setMillDiameter(Integer.parseInt(p5));
                         data.setMillWidth(Double.parseDouble(p6));
-                        calculator.compute(data);
+                        if (!validDTO(data)) {
+                            output.setText("this not may be <= 0");
+                        } else {
+                            calculator.compute(data);
+                        }
                     } else {
                         output.setText("Incorrect input");
                     }
@@ -225,7 +245,11 @@ public class WindowController implements ActionListener {
                         data.setQualitat(Integer.parseInt(p3));
                         data.setZcount(Integer.parseInt(p4));
                         data.setMillDiameter(Integer.parseInt(p5));
-                        calculator.compute(data);
+                        if (!validDTO(data)) {
+                            output.setText("this not may be <= 0");
+                        } else {
+                            calculator.compute(data);
+                        }
                     } else {
                         output.setText("Incorrect input");
                     }
@@ -252,6 +276,41 @@ public class WindowController implements ActionListener {
 
     public boolean validNumbers(String text) {
         return text.matches("([0-9]*[.])?[0-9]+") && !text.isEmpty();
+    }
+
+    public boolean validDTO(Data data) {
+        if(data.getCuttingType().equals("Turning")) {
+            if (data.getToolType().equals("Threading")) {
+                if (data.getThreadStep() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
+                    return false;
+                }
+            } else if (data.getToolType().equals("Segment")) {
+                if (data.getBladeWidth() <= 0 || data.getDepth() <= 0 || data.getDiameter() <= 0) {
+                    return false;
+                }
+            } else {
+                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
+                    return false;
+                }
+            }
+        } else if (data.getCuttingType().equals("Milling")) {
+            if (data.getToolType().equals("Disk milling")) {
+                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getBladeWidth() <= 0 ||
+                data.getZcount() <= 0 || data.getMillWidth() <= 0 || data.getMillDiameter() <= 0) {
+                    return false;
+                }
+            } else {
+                if (data.getSquare() <= 0 || data.getDepth() <= 0 || data.getMillDiameter() <= 0 ||
+                data.getZcount() <= 0) {
+                    return false;
+                }
+            }
+        } else {
+            if (data.getLength() <= 0 || data.getDiameter() <= 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void mainPage() {
