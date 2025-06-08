@@ -58,8 +58,9 @@ public class WindowController implements ActionListener {
 
     public WindowController() {
         frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         output = new JTextField();
-        output.setSize(new Dimension(450, 400));
+        output.setSize(new Dimension(450, 50));
         output.setFont(new Font("Ink Free", Font.PLAIN, 50));
         output.setBackground(new Color(30, 30, 30));
         output.setForeground(new Color(30, 200, 100));
@@ -80,9 +81,14 @@ public class WindowController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == isHSS) {
+        if (e.getSource() == isHSS && !data.isHSS()) {
             isHSS.setSelected(true);
             data.setHSS(true);
+            return;
+        }
+        if (e.getSource() == isHSS && data.isHSS()) {
+            isHSS.setSelected(false);
+            data.setHSS(false);
             return;
         }
         if (e.getSource() == isCPU && !data.isCPU()) {
@@ -271,7 +277,6 @@ public class WindowController implements ActionListener {
                 millingParametersWindow();
             }
         }
-        System.out.println(data);
     }
 
     public boolean validNumbers(String text) {
@@ -314,7 +319,7 @@ public class WindowController implements ActionListener {
     }
 
     public void mainPage() {
-        frame.setSize(450, 800);
+        frame.setSize(450, 290);
         frame.setResizable(false);
         frame.setVisible(true);
         text.setBackground(new Color(30, 30, 30));
