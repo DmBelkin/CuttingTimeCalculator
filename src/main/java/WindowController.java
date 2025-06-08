@@ -150,6 +150,7 @@ public class WindowController implements ActionListener {
         } else if (text.equals("Submit")) {
             String p1 = drillingFields[0].getText();
             String p2 = drillingFields[1].getText();
+            data.setToolType("Drilling");
             if (validNumbers(p1) && validNumbers(p2)) {
                 data.setDiameter(Double.parseDouble(p1));
                 data.setDepth(Double.parseDouble(p2));
@@ -311,7 +312,7 @@ public class WindowController implements ActionListener {
                 }
             }
         } else {
-            if (data.getLength() <= 0 || data.getDiameter() <= 0) {
+            if (data.getDiameter() <= 0 || data.getDepth() <= 0) {
                 return false;
             }
         }
