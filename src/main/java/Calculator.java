@@ -185,7 +185,7 @@ public class Calculator {
         double preFinishMilling = (((V / 100) * 5) / oneRowV1) * oneRowTime1;
         double finisMilling = (((V / 100) * 5) / oneRowV2) * oneRowTime2;
         if (data.getQualitat() >= 14) {
-            result += preMilling;
+            result += ((V / oneRowV) * oneRowTime);
         } else if (data.getQualitat() < 14 && data.getQualitat() >= 10) {
             result += preMilling;
             result += changeTool;
@@ -200,6 +200,10 @@ public class Calculator {
             result *= 2;
         }
         return result;
+    }
+
+    public double conturMilling(Data data) {
+        return 0;
     }
 
     public double computeDiscMilling(Data data) {
@@ -249,6 +253,7 @@ public class Calculator {
         }
         double Vc = params[0];
         if (data.isHSS()) {
+            params[1] /= 4;
             Vc /= 4;
         }
         double spin = spinCount(Vc, data.getDiameter());
