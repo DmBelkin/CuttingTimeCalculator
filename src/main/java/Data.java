@@ -34,6 +34,8 @@ public class Data {
 
     private double millWidth;
 
+    private double millLength;
+
     public void reset() {
         this.cuttingType = "";
         this.toolType = "";
@@ -49,6 +51,14 @@ public class Data {
         this.millWidth = 0;
         this.millDiameter = 0;
         this.segmentGrooveWidth = 0;
+    }
+
+    public double getMillLength() {
+        return millLength;
+    }
+
+    public void setMillLength(double millLength) {
+        this.millLength = millLength;
     }
 
     public boolean isHSS() {

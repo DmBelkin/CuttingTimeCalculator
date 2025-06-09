@@ -72,8 +72,10 @@ public class WindowController implements ActionListener {
         calculator.setController(this);
         data = new Data();
         isCPU = new JToggleButton("CNC");
+        isCPU.setFont(new Font("MvBoli", Font.PLAIN, 20));
         isCPU.addActionListener(this);
         isHSS = new JToggleButton("HSS");
+        isHSS.setFont(new Font("MvBoli", Font.PLAIN, 20));
         isHSS.addActionListener(this);
         mainPage();
     }
@@ -135,10 +137,13 @@ public class WindowController implements ActionListener {
         } else if (text.equals("Segment")) {
             data.setToolType(text);
             materialsMatrixPanel();
-        } else if (text.equals("Face milling")) {
+        } else if (text.equals("Volume")) {
             data.setToolType(text);
             materialsMatrixPanel();
         } else if (text.equals("End milling")) {
+            data.setToolType(text);
+            materialsMatrixPanel();
+        } else if (text.equals("Circuit")) {
             data.setToolType(text);
             materialsMatrixPanel();
         } else if (text.equals("Threading")) {
@@ -202,7 +207,7 @@ public class WindowController implements ActionListener {
                 String p4 = turningFields[3].getText();
                 String p5 = turningFields[4].getText();
                 if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
-                validNumbers(p5)) {
+                        validNumbers(p5)) {
                     data.setDiameter(Double.parseDouble(p1));
                     data.setDepth(Double.parseDouble(p2));
                     data.setLength(Double.parseDouble(p3));
@@ -225,13 +230,36 @@ public class WindowController implements ActionListener {
                     String p5 = millingFields[4].getText();
                     String p6 = millingFields[5].getText();
                     if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
-                    && validNumbers(p6)) {
+                            && validNumbers(p6)) {
                         data.setLength(Double.parseDouble(p1));
                         data.setDepth(Double.parseDouble(p2));
                         data.setBladeWidth(Integer.parseInt(p3));
                         data.setZcount(Integer.parseInt(p4));
                         data.setMillDiameter(Integer.parseInt(p5));
                         data.setMillWidth(Double.parseDouble(p6));
+                        if (!validDTO(data)) {
+                            output.setText("this not may be <= 0");
+                        } else {
+                            calculator.compute(data);
+                        }
+                    } else {
+                        output.setText("Incorrect input");
+                    }
+                } else if (data.getToolType().equals("Circuit")) {
+                    String p1 = millingFields[0].getText();
+                    String p2 = millingFields[1].getText();
+                    String p3 = millingFields[2].getText();
+                    String p4 = millingFields[3].getText();
+                    String p5 = millingFields[4].getText();
+                    String p6 = millingFields[5].getText();
+                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
+                    && validNumbers(p6)) {
+                        data.setLength(Double.parseDouble(p1));
+                        data.setDepth(Double.parseDouble(p2));
+                        data.setBladeWidth(Integer.parseInt(p3));
+                        data.setZcount(Integer.parseInt(p4));
+                        data.setMillDiameter(Integer.parseInt(p5));
+                        data.setMillLength(Double.parseDouble(p6));
                         if (!validDTO(data)) {
                             output.setText("this not may be <= 0");
                         } else {
@@ -266,7 +294,7 @@ public class WindowController implements ActionListener {
             data.setMaterial(text);
             if (data.getToolType().equals("Disk milling")) {
                 discMillingParametersPanel();
-            } else if (data.getCuttingType().equals("Drilling")){
+            } else if (data.getCuttingType().equals("Drilling")) {
                 calculator.compute(data);
             } else if (data.getToolType().equals("Segment")) {
                 segmentTurningParametersPanel();
@@ -274,6 +302,8 @@ public class WindowController implements ActionListener {
                 threadTurningParametersPanel();
             } else if (data.getCuttingType().equals("Turning")) {
                 turningParametersWindow();
+            } else if (data.getToolType().equals("Circuit")) {
+                conturMillingParametersPanel();
             } else if (data.getCuttingType().equals("Milling")) {
                 millingParametersWindow();
             }
@@ -285,7 +315,7 @@ public class WindowController implements ActionListener {
     }
 
     public boolean validDTO(Data data) {
-        if(data.getCuttingType().equals("Turning")) {
+        if (data.getCuttingType().equals("Turning")) {
             if (data.getToolType().equals("Threading")) {
                 if (data.getThreadStep() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
                     return false;
@@ -302,12 +332,17 @@ public class WindowController implements ActionListener {
         } else if (data.getCuttingType().equals("Milling")) {
             if (data.getToolType().equals("Disk milling")) {
                 if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getBladeWidth() <= 0 ||
-                data.getZcount() <= 0 || data.getMillWidth() <= 0 || data.getMillDiameter() <= 0) {
+                        data.getZcount() <= 0 || data.getMillWidth() <= 0 || data.getMillDiameter() <= 0) {
+                    return false;
+                }
+            } else if (data.getToolType().equals("Circuit")) {
+                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getBladeWidth() <= 0 ||
+                        data.getZcount() <= 0 || data.getMillLength() <= 0 || data.getMillDiameter() <= 0) {
                     return false;
                 }
             } else {
                 if (data.getSquare() <= 0 || data.getDepth() <= 0 || data.getMillDiameter() <= 0 ||
-                data.getZcount() <= 0) {
+                        data.getZcount() <= 0) {
                     return false;
                 }
             }
@@ -479,13 +514,44 @@ public class WindowController implements ActionListener {
         render(millingParameters);
     }
 
+    public void conturMillingParametersPanel() {
+        millingFields = new JTextField[6];
+        JButton[] buttons = new JButton[3];
+        String[] types = new String[]{"Go", "Back"};
+        millingParameters = new JPanel();
+        millingParameters.setLayout(new GridLayout(3, 3));
+        millingParameters.setBackground(new Color(200, 200, 200));
+        millingFields[0] = createTextField("Total length");
+        millingParameters.add(millingFields[0]);
+        millingFields[1] = createTextField("Part height");
+        millingParameters.add(millingFields[1]);
+        millingFields[2] = createTextField("Allowance");
+        millingParameters.add(millingFields[2]);
+        millingFields[3] = createTextField("Z-count");
+        millingParameters.add(millingFields[3]);
+        millingFields[4] = createTextField("Mill D");
+        millingParameters.add(millingFields[4]);
+        millingFields[5] = createTextField("Mill length");
+        millingParameters.add(millingFields[5]);
+        millingParameters.add(isCPU);
+        for (int i = 0; i < 2; i++) {
+            buttons[i] = createButton(types[i]);
+            millingParameters.add(buttons[i]);
+        }
+        control = buttons;
+        frame.remove(last);
+        last = millingParameters;
+        render(millingParameters);
+    }
+
 
     public void millingWindow() {
         milling = new JPanel();
         milling.setLayout(new GridLayout(3, 3));
         milling.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
-        String[] types = new String[]{"End milling", "Face milling", "Disk milling", "", "", "", "", "", "Back"};
+        String[] types = new String[]{"Volume", "Circuit", "Disk milling", "", "", "", "", "",
+                "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             milling.add(buttons[i]);
@@ -567,7 +633,7 @@ public class WindowController implements ActionListener {
     public void turningParametersWindow() {
         turningFields = new JTextField[5];
         JButton[] buttons = new JButton[3];
-        String[] types = new String[]{ "", "Go", "Back"};
+        String[] types = new String[]{"", "Go", "Back"};
         turningParameters = new JPanel();
         turningParameters.setLayout(new GridLayout(3, 3));
         turningParameters.setBackground(new Color(200, 200, 200));
@@ -593,6 +659,6 @@ public class WindowController implements ActionListener {
     }
 
     public void outputWindow(String minutes) {
-         output.setText(minutes);
+        output.setText(minutes);
     }
 }

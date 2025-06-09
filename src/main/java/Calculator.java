@@ -161,6 +161,9 @@ public class Calculator {
         if (data.getToolType().equals("Disk milling")) {
             return computeDiscMilling(data);
         }
+        if (data.getToolType().equals("Circuit")) {
+            return circuitMilling(data);
+        }
         double Tpz = 0.5;
         int column = getMaterial(data.getMaterial());
         double result = 0;
@@ -202,8 +205,32 @@ public class Calculator {
         return result;
     }
 
-    public double conturMilling(Data data) {
-        return 0;
+    public double circuitMilling(Data data) {
+        double Tpz = 0.5;
+        double changeTool = 1;
+        int column = getMaterial(data.getMaterial());
+        double result = 0;
+        double spin1 = spinCount(Vc_end_milling[4][column][0], data.getMillDiameter());
+        double spin3 = spinCount(Vc_end_milling[2][column][0], data.getMillDiameter());
+        double oneRowTime = calculateTime(data.getLength(), data.getZcount() * Vc_end_milling[4][column][1],
+                spin1) + Tpz;
+        double oneRowTime1 = calculateTime(data.getLength(), data.getZcount() * Vc_end_milling[2][column][1],
+                spin3) + Tpz;
+        double allowance = data.getBladeWidth();
+        double height = data.getDepth();
+        do {
+            while (allowance > 1) {
+                result += oneRowTime;
+                allowance -= Vc_end_milling[4][column][2] + Tpz;
+            }
+            height -= data.getMillLength();
+        } while (height > data.getMillLength());
+        result += changeTool;
+        result += oneRowTime1 + Tpz;
+        if (!data.isCPU()) {
+            result *= 2;
+        }
+        return result;
     }
 
     public double computeDiscMilling(Data data) {
