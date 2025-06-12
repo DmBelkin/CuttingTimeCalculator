@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class WindowController implements ActionListener {
 
@@ -45,9 +46,9 @@ public class WindowController implements ActionListener {
 
     private JLabel text;
 
-    private Calculator calculator;
-
     private Data data;
+
+    private CommandWorker worker;
 
     private JTextField output;
 
@@ -68,9 +69,8 @@ public class WindowController implements ActionListener {
         frame.add(output, BorderLayout.PAGE_END);
         panel = new JPanel();
         text = new JLabel();
-        calculator = new Calculator();
-        calculator.setController(this);
         data = new Data();
+        worker = new CommandWorker(this, data);
         isCPU = new JToggleButton("CNC");
         isCPU.setFont(new Font("MvBoli", Font.PLAIN, 20));
         isCPU.addActionListener(this);
@@ -105,257 +105,21 @@ public class WindowController implements ActionListener {
         }
         for (int i = 0; i < control.length; i++) {
             if (e.getSource() == control[i]) {
-                getAction(control[i].getText());
+                worker.getAction(control[i].getText());
             }
         }
     }
 
-    public void getAction(String text) {
-        if (text.isBlank()) {
-            return;
-        }
-        if (text.equals("Turning")) {
-            data.setCuttingType(text);
-            turningWindow();
-        } else if (text.equals("Milling")) {
-            data.setCuttingType(text);
-            millingWindow();
-        } else if (text.equals("Drilling")) {
-            data.setCuttingType(text);
-            drillingWindow();
-        } else if (text.equals("Back")) {
-            backFunction(last);
-        } else if (text.equals("Turning out")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Boring")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Groove")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Segment")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Volume")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("End milling")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Circuit")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Threading")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Disk milling")) {
-            data.setToolType(text);
-            materialsMatrixPanel();
-        } else if (text.equals("Submit")) {
-            String p1 = drillingFields[0].getText();
-            String p2 = drillingFields[1].getText();
-            data.setToolType("Drilling");
-            if (validNumbers(p1) && validNumbers(p2)) {
-                data.setDiameter(Double.parseDouble(p1));
-                data.setDepth(Double.parseDouble(p2));
-                if (!validDTO(data)) {
-                    output.setText("this not may be <= 0");
-                } else {
-                    materialsMatrixPanel();
-                }
-            } else {
-                output.setText("Incorrect input");
-            }
-        } else if (text.equals("Go")) {
-            if (data.getToolType().equals("Segment")) {
-                String p3 = segmentTurningFields[0].getText();
-                String p4 = segmentTurningFields[1].getText();
-                String p5 = segmentTurningFields[2].getText();
-                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
-                    data.setBladeWidth(Double.parseDouble(p3));
-                    data.setDepth(Double.parseDouble(p4));
-                    data.setDiameter(Double.parseDouble(p5));
-                    if (!validDTO(data)) {
-                        output.setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    output.setText("Incorrect input");
-                }
-            } else if (data.getToolType().equals("Threading")) {
-                String p2 = threadTurningFields[0].getText();
-                String p3 = threadTurningFields[1].getText();
-                String p4 = threadTurningFields[2].getText();
-                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p2)) {
-                    data.setThreadStep(Double.parseDouble(p2));
-                    data.setDiameter(Double.parseDouble(p3));
-                    data.setLength(Double.parseDouble(p4));
-                    if (!validDTO(data)) {
-                        output.setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    output.setText("Incorrect input");
-                }
-            } else if (data.getCuttingType().equals("Turning")) {
-                String p1 = turningFields[0].getText();
-                String p2 = turningFields[1].getText();
-                String p3 = turningFields[2].getText();
-                String p4 = turningFields[3].getText();
-                String p5 = turningFields[4].getText();
-                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
-                        validNumbers(p5)) {
-                    data.setDiameter(Double.parseDouble(p1));
-                    data.setDepth(Double.parseDouble(p2));
-                    data.setLength(Double.parseDouble(p3));
-                    data.setChamfersCount(Integer.parseInt(p4));
-                    data.setQualitat(Integer.parseInt(p5));
-                    if (!validDTO(data)) {
-                        output.setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    output.setText("Incorrect input");
-                }
-            } else if (data.getCuttingType().equals("Milling")) {
-                if (data.getToolType().equals("Disk milling")) {
-                    String p1 = millingFields[0].getText();
-                    String p2 = millingFields[1].getText();
-                    String p3 = millingFields[2].getText();
-                    String p4 = millingFields[3].getText();
-                    String p5 = millingFields[4].getText();
-                    String p6 = millingFields[5].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
-                            && validNumbers(p6)) {
-                        data.setLength(Double.parseDouble(p1));
-                        data.setDepth(Double.parseDouble(p2));
-                        data.setBladeWidth(Integer.parseInt(p3));
-                        data.setZcount(Integer.parseInt(p4));
-                        data.setMillDiameter(Integer.parseInt(p5));
-                        data.setMillWidth(Double.parseDouble(p6));
-                        if (!validDTO(data)) {
-                            output.setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        output.setText("Incorrect input");
-                    }
-                } else if (data.getToolType().equals("Circuit")) {
-                    String p1 = millingFields[0].getText();
-                    String p2 = millingFields[1].getText();
-                    String p3 = millingFields[2].getText();
-                    String p4 = millingFields[3].getText();
-                    String p5 = millingFields[4].getText();
-                    String p6 = millingFields[5].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
-                    && validNumbers(p6)) {
-                        data.setLength(Double.parseDouble(p1));
-                        data.setDepth(Double.parseDouble(p2));
-                        data.setBladeWidth(Integer.parseInt(p3));
-                        data.setZcount(Integer.parseInt(p4));
-                        data.setMillDiameter(Integer.parseInt(p5));
-                        data.setMillLength(Double.parseDouble(p6));
-                        if (!validDTO(data)) {
-                            output.setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        output.setText("Incorrect input");
-                    }
-                } else {
-                    String p1 = millingFields[0].getText();
-                    String p2 = millingFields[1].getText();
-                    String p3 = millingFields[2].getText();
-                    String p4 = millingFields[3].getText();
-                    String p5 = millingFields[4].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
-                        data.setSquare(Double.parseDouble(p1));
-                        data.setDepth(Double.parseDouble(p2));
-                        data.setQualitat(Integer.parseInt(p3));
-                        data.setZcount(Integer.parseInt(p4));
-                        data.setMillDiameter(Integer.parseInt(p5));
-                        if (!validDTO(data)) {
-                            output.setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        output.setText("Incorrect input");
-                    }
-                }
-            }
-        } else {
-            data.setMaterial(text);
-            if (data.getToolType().equals("Disk milling")) {
-                discMillingParametersPanel();
-            } else if (data.getCuttingType().equals("Drilling")) {
-                calculator.compute(data);
-            } else if (data.getToolType().equals("Segment")) {
-                segmentTurningParametersPanel();
-            } else if (data.getToolType().equals("Threading")) {
-                threadTurningParametersPanel();
-            } else if (data.getCuttingType().equals("Turning")) {
-                turningParametersWindow();
-            } else if (data.getToolType().equals("Circuit")) {
-                conturMillingParametersPanel();
-            } else if (data.getCuttingType().equals("Milling")) {
-                millingParametersWindow();
-            }
-        }
-    }
-
-    public boolean validNumbers(String text) {
-        return text.matches("([0-9]*[.])?[0-9]+") && !text.isEmpty();
-    }
-
-    public boolean validDTO(Data data) {
-        if (data.getCuttingType().equals("Turning")) {
-            if (data.getToolType().equals("Threading")) {
-                if (data.getThreadStep() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
-                    return false;
-                }
-            } else if (data.getToolType().equals("Segment")) {
-                if (data.getBladeWidth() <= 0 || data.getDepth() <= 0 || data.getDiameter() <= 0) {
-                    return false;
-                }
-            } else {
-                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
-                    return false;
-                }
-            }
-        } else if (data.getCuttingType().equals("Milling")) {
-            if (data.getToolType().equals("Disk milling")) {
-                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getBladeWidth() <= 0 ||
-                        data.getZcount() <= 0 || data.getMillWidth() <= 0 || data.getMillDiameter() <= 0) {
-                    return false;
-                }
-            } else if (data.getToolType().equals("Circuit")) {
-                if (data.getDepth() <= 0 || data.getLength() <= 0 || data.getBladeWidth() <= 0 ||
-                        data.getZcount() <= 0 || data.getMillLength() <= 0 || data.getMillDiameter() <= 0) {
-                    return false;
-                }
-            } else {
-                if (data.getSquare() <= 0 || data.getDepth() <= 0 || data.getMillDiameter() <= 0 ||
-                        data.getZcount() <= 0) {
-                    return false;
-                }
-            }
-        } else {
-            if (data.getDiameter() <= 0 || data.getDepth() <= 0) {
-                return false;
-            }
-        }
-        return true;
+    public String searchInvalidParam(Map<String, Integer> params) {
+        /**
+         * TODO
+         * вывод сообщения, какое именно поле некорректно
+         */
+        return "";
     }
 
     public void mainPage() {
-        frame.setSize(450, 290);
+        frame.setSize(450, 340);
         frame.setResizable(false);
         frame.setVisible(true);
         text.setBackground(new Color(30, 30, 30));
@@ -365,7 +129,7 @@ public class WindowController implements ActionListener {
         text.setText("Cuttingtime calculator");
         text.setOpaque(true);
         panel.setLayout(new BorderLayout());
-        panel.setBounds(0, 0, 100, 100);
+        panel.setBounds(0, 0, 450, 50);
         panel.add(text);
         frame.add(panel, BorderLayout.NORTH);
 
@@ -458,6 +222,34 @@ public class WindowController implements ActionListener {
         frame.remove(last);
         last = segmentTurningParameters;
         render(segmentTurningParameters);
+    }
+
+    public void faceTurningParametersPanel() {
+        /**
+         * TODO
+         * сделать панель параметров подрезки торца
+         */
+        threadTurningFields = new JTextField[3];
+        JButton[] buttons = new JButton[5];
+        String[] types = new String[]{"", "", "", "Go", "Back"};
+        threadTurningParameters = new JPanel();
+        threadTurningParameters.setLayout(new GridLayout(3, 3));
+        threadTurningParameters.setBackground(new Color(200, 200, 200));
+        threadTurningFields[0] = createTextField("Step");
+        threadTurningParameters.add(threadTurningFields[0]);
+        threadTurningFields[1] = createTextField("Diameter");
+        threadTurningParameters.add(threadTurningFields[1]);
+        threadTurningFields[2] = createTextField("Length");
+        threadTurningParameters.add(threadTurningFields[2]);
+        threadTurningParameters.add(isCPU);
+        for (int i = 0; i < 5; i++) {
+            buttons[i] = createButton(types[i]);
+            threadTurningParameters.add(buttons[i]);
+        }
+        control = buttons;
+        frame.remove(last);
+        last = threadTurningParameters;
+        render(threadTurningParameters);
     }
 
     public void threadTurningParametersPanel() {
@@ -660,5 +452,69 @@ public class WindowController implements ActionListener {
 
     public void outputWindow(String minutes) {
         output.setText(minutes);
+    }
+
+    public JButton[] getControl() {
+        return control;
+    }
+
+    public JPanel getLast() {
+        return last;
+    }
+
+    public JPanel getTurning() {
+        return turning;
+    }
+
+    public JPanel getMilling() {
+        return milling;
+    }
+
+    public JPanel getDrilling() {
+        return drilling;
+    }
+
+    public JPanel getMaterials() {
+        return materials;
+    }
+
+    public JPanel getTurningParameters() {
+        return turningParameters;
+    }
+
+    public JPanel getMillingParameters() {
+        return millingParameters;
+    }
+
+    public JPanel getSegmentTurningParameters() {
+        return segmentTurningParameters;
+    }
+
+    public JTextField[] getSegmentTurningFields() {
+        return segmentTurningFields;
+    }
+
+    public JPanel getThreadTurningParameters() {
+        return threadTurningParameters;
+    }
+
+    public JTextField[] getThreadTurningFields() {
+        return threadTurningFields;
+    }
+
+    public JTextField[] getDrillingFields() {
+        return drillingFields;
+    }
+
+    public JTextField[] getMillingFields() {
+        return millingFields;
+    }
+
+    public JTextField[] getTurningFields() {
+        return turningFields;
+    }
+
+    public JTextField getOutput() {
+        return output;
     }
 }
