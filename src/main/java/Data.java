@@ -51,6 +51,8 @@ public class Data {
         this.millWidth = 0;
         this.millDiameter = 0;
         this.segmentGrooveWidth = 0;
+        this.millLength = 0;
+        this.bladeWidth = 0;
     }
 
     public double getMillLength() {
