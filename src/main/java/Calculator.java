@@ -132,9 +132,12 @@ public class Calculator {
             result += calculateTime(data.getDepth(), grooveFactor(Vc_turning[2][column][2]),
                     spinCount(Vcs, data.getDiameter())) + Tpz;
         } else if (data.getToolType().equals("Threading")) {
-            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc, data.getDiameter())) + Tpz;
-            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc2, data.getDiameter())) + Tpz;
-            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc3, data.getDiameter())) * 8 + Tpz;
+            double Vct = Vc_threading[4][column][0];
+            double Vc2t = Vc_threading[2][column][0];
+            double Vc3t = Vc_threading[0][column][0];
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vct, data.getDiameter())) + Tpz;
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc2t, data.getDiameter())) + Tpz;
+            result += calculateTime(data.getLength(), data.getThreadStep(), spinCount(Vc3t, data.getDiameter())) * 8 + Tpz;
         }
         result += data.getChamfersCount();
         if (!data.isCPU()) {

@@ -110,13 +110,6 @@ public class WindowController implements ActionListener {
         }
     }
 
-    public String searchInvalidParam(Map<String, Integer> params) {
-        /**
-         * TODO
-         * вывод сообщения, какое именно поле некорректно
-         */
-        return "";
-    }
 
     public void mainPage() {
         frame.setSize(450, 340);
