@@ -14,7 +14,7 @@ public class Data {
 
     private double depth;
 
-    private int chamfersCount;
+    private double chamfersCount;
 
     private double threadStep;
 
@@ -22,11 +22,11 @@ public class Data {
 
     private double bladeWidth;
 
-    private int qualitat;
+    private double qualitat;
 
-    private int Zcount;
+    private double Zcount;
 
-    private int millDiameter;
+    private double millDiameter;
 
     private boolean isHSS;
 
@@ -77,11 +77,11 @@ public class Data {
         isCPU = CPU;
     }
 
-    public int getMillDiameter() {
+    public double getMillDiameter() {
         return millDiameter;
     }
 
-    public void setMillDiameter(int millDiameter) {
+    public void setMillDiameter(double millDiameter) {
         this.millDiameter = millDiameter;
     }
 
@@ -112,11 +112,11 @@ public class Data {
         return segmentGrooveWidth;
     }
 
-    public int getZcount() {
+    public double getZcount() {
         return Zcount;
     }
 
-    public void setZcount(int zcount) {
+    public void setZcount(double zcount) {
         Zcount = zcount;
     }
 
@@ -132,11 +132,11 @@ public class Data {
         this.cuttingType = cuttingType;
     }
 
-    public int getQualitat() {
+    public double getQualitat() {
         return qualitat;
     }
 
-    public void setQualitat(int qualitat) {
+    public void setQualitat(double qualitat) {
         this.qualitat = qualitat;
     }
 
@@ -188,11 +188,11 @@ public class Data {
         this.depth = depth;
     }
 
-    public int getChamfersCount() {
+    public double getChamfersCount() {
         return chamfersCount;
     }
 
-    public void setChamfersCount(int chamfersCount) {
+    public void setChamfersCount(double chamfersCount) {
         this.chamfersCount = chamfersCount;
     }
 

@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class CommandWorker {
 
     private Calculator calculator;
@@ -56,145 +58,21 @@ public class CommandWorker {
             data.setToolType(text);
             controller.materialsMatrixPanel();
         } else if (text.equals("Submit")) {
-            String p1 = controller.getDrillingFields()[0].getText();
-            String p2 = controller.getDrillingFields()[1].getText();
-            data.setToolType("Drilling");
-            if (validNumbers(p1) && validNumbers(p2)) {
-                data.setDiameter(Double.parseDouble(p1));
-                data.setDepth(Double.parseDouble(p2));
-                if (!validDTO(data)) {
-                    controller.getOutput().setText("this not may be <= 0");
-                } else {
-                    controller.materialsMatrixPanel();
-                }
-            } else {
-                controller.getOutput().setText("Incorrect input");
-            }
+            drillingCalc();
         } else if (text.equals("Go")) {
             if (data.getToolType().equals("Segment")) {
-                String p3 = controller.getSegmentTurningFields()[0].getText();
-                String p4 = controller.getSegmentTurningFields()[1].getText();
-                String p5 = controller.getSegmentTurningFields()[2].getText();
-                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
-                    data.setBladeWidth(Double.parseDouble(p3));
-                    data.setDepth(Double.parseDouble(p4));
-                    data.setDiameter(Double.parseDouble(p5));
-                    if (!validDTO(data)) {
-                        controller.getOutput().setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    controller.getOutput().setText("Incorrect input");
-                }
+               segmentCalc();
             } else if (data.getToolType().equals("Threading")) {
-                String p2 = controller.getThreadTurningFields()[0].getText();
-                String p3 = controller.getThreadTurningFields()[1].getText();
-                String p4 = controller.getThreadTurningFields()[2].getText();
-                if (validNumbers(p3) && validNumbers(p4) && validNumbers(p2)) {
-                    data.setThreadStep(Double.parseDouble(p2));
-                    data.setDiameter(Double.parseDouble(p3));
-                    data.setLength(Double.parseDouble(p4));
-                    if (!validDTO(data)) {
-                        controller.getOutput().setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    controller.getOutput().setText("Incorrect input");
-                }
+                threadingCalc();
             } else if (data.getCuttingType().equals("Turning")) {
-                String p1 = controller.getTurningFields()[0].getText();
-                String p2 = controller.getTurningFields()[1].getText();
-                String p3 = controller.getTurningFields()[2].getText();
-                String p4 = controller.getTurningFields()[3].getText();
-                String p5 = controller.getTurningFields()[4].getText();
-                if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
-                        validNumbers(p5)) {
-                    data.setDiameter(Double.parseDouble(p1));
-                    data.setDepth(Double.parseDouble(p2));
-                    data.setLength(Double.parseDouble(p3));
-                    data.setChamfersCount(Integer.parseInt(p4));
-                    data.setQualitat(Integer.parseInt(p5));
-                    if (!validDTO(data)) {
-                        controller.getOutput().setText("this not may be <= 0");
-                    } else {
-                        calculator.compute(data);
-                    }
-                } else {
-                    controller.getOutput().setText("Incorrect input");
-                }
+                turningCalc();
             } else if (data.getCuttingType().equals("Milling")) {
                 if (data.getToolType().equals("Disk milling")) {
-                    String p1 = controller.getMillingFields()[0].getText();
-                    String p2 = controller.getMillingFields()[1].getText();
-                    String p3 = controller.getMillingFields()[2].getText();
-                    String p4 = controller.getMillingFields()[3].getText();
-                    String p5 = controller.getMillingFields()[4].getText();
-                    String p6 = controller.getMillingFields()[5].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
-                            && validNumbers(p6)) {
-                        data.setLength(Double.parseDouble(p1));
-                        data.setDepth(Double.parseDouble(p2));
-                        data.setBladeWidth(Integer.parseInt(p3));
-                        data.setZcount(Integer.parseInt(p4));
-                        data.setMillDiameter(Integer.parseInt(p5));
-                        data.setMillWidth(Double.parseDouble(p6));
-                        if (!validDTO(data)) {
-                            controller.getOutput().setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        controller.getOutput().setText("Incorrect input");
-                    }
+                    discMillingCalc();
                 } else if (data.getToolType().equals("Circuit")) {
-                    String p1 = controller.getMillingFields()[0].getText();
-                    String p2 = controller.getMillingFields()[1].getText();
-                    String p3 = controller.getMillingFields()[2].getText();
-                    String p4 = controller.getMillingFields()[3].getText();
-                    String p5 = controller.getMillingFields()[4].getText();
-                    String p6 = controller.getMillingFields()[5].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
-                            && validNumbers(p6)) {
-                        data.setLength(Double.parseDouble(replaceComma(p1)));
-                        data.setDepth(Double.parseDouble(replaceComma(p2)));
-                        data.setBladeWidth(Integer.parseInt(replaceComma(p3)));
-                        data.setZcount(Integer.parseInt(replaceComma(p4)));
-                        data.setMillDiameter(Integer.parseInt(replaceComma(p5)));
-                        data.setMillLength(Double.parseDouble(replaceComma(p6)));
-                        if (!validDTO(data)) {
-                            controller.getOutput().setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        controller.getOutput().setText("Incorrect input");
-                    }
+                    circuitMillingCalc();
                 } else {
-                    String p1 = controller.getMillingFields()[0].getText();
-                    String p2 = controller.getMillingFields()[1].getText();
-                    String p3 = controller.getMillingFields()[2].getText();
-                    String p4 = controller.getMillingFields()[3].getText();
-                    String p5 = controller.getMillingFields()[4].getText();
-                    if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
-                        data.setSquare(Double.parseDouble(p1));
-                        data.setDepth(Double.parseDouble(p2));
-                        data.setQualitat(Integer.parseInt(p3));
-                        data.setZcount(Integer.parseInt(p4));
-                        data.setMillDiameter(Integer.parseInt(p5));
-                        /**
-                         * TODO
-                         * Защитить код от исключений,связанных с целыми числами
-                         */
-                        if (!validDTO(data)) {
-                            controller.getOutput().setText("this not may be <= 0");
-                        } else {
-                            calculator.compute(data);
-                        }
-                    } else {
-                        controller.getOutput().setText("Incorrect input");
-                    }
+                    millingCalc();
                 }
             }
         } else {
@@ -259,6 +137,154 @@ public class CommandWorker {
             }
         }
         return true;
+    }
+
+    public void drillingCalc() {
+        String p1 = controller.getDrillingFields()[0].getText();
+        String p2 = controller.getDrillingFields()[1].getText();
+        data.setToolType("Drilling");
+        if (validNumbers(p1) && validNumbers(p2)) {
+            data.setDiameter(Double.parseDouble(replaceComma(p1)));
+            data.setDepth(Double.parseDouble(replaceComma(p2)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                controller.materialsMatrixPanel();
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void segmentCalc() {
+        String p3 = controller.getSegmentTurningFields()[0].getText();
+        String p4 = controller.getSegmentTurningFields()[1].getText();
+        String p5 = controller.getSegmentTurningFields()[2].getText();
+        if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
+            data.setBladeWidth(Double.parseDouble(replaceComma(p3)));
+            data.setDepth(Double.parseDouble(replaceComma(p4)));
+            data.setDiameter(Double.parseDouble(replaceComma(p5)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void threadingCalc() {
+        String p2 = controller.getThreadTurningFields()[0].getText();
+        String p3 = controller.getThreadTurningFields()[1].getText();
+        String p4 = controller.getThreadTurningFields()[2].getText();
+        if (validNumbers(p3) && validNumbers(p4) && validNumbers(p2)) {
+            data.setThreadStep(Double.parseDouble(replaceComma(p2)));
+            data.setDiameter(Double.parseDouble(replaceComma(p3)));
+            data.setLength(Double.parseDouble(replaceComma(p4)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void turningCalc() {
+        String p1 = controller.getTurningFields()[0].getText();
+        String p2 = controller.getTurningFields()[1].getText();
+        String p3 = controller.getTurningFields()[2].getText();
+        String p4 = controller.getTurningFields()[3].getText();
+        String p5 = controller.getTurningFields()[4].getText();
+        if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) &&
+                validNumbers(p5)) {
+            data.setDiameter(Double.parseDouble(replaceComma(p1)));
+            data.setDepth(Double.parseDouble(replaceComma(p2)));
+            data.setLength(Double.parseDouble(replaceComma(p3)));
+            data.setChamfersCount(Double.parseDouble(replaceComma(p4)));
+            data.setQualitat(Double.parseDouble(replaceComma(p5)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void millingCalc() {
+        String p1 = controller.getMillingFields()[0].getText();
+        String p2 = controller.getMillingFields()[1].getText();
+        String p3 = controller.getMillingFields()[2].getText();
+        String p4 = controller.getMillingFields()[3].getText();
+        String p5 = controller.getMillingFields()[4].getText();
+        if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
+            data.setSquare(Double.parseDouble(replaceComma(p1)));
+            data.setDepth(Double.parseDouble(replaceComma(p2)));
+            data.setQualitat(Double.parseDouble(replaceComma(p3)));
+            data.setZcount(Double.parseDouble(replaceComma(p4)));
+            data.setMillDiameter(Double.parseDouble(replaceComma(p5)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void circuitMillingCalc() {
+        String p1 = controller.getMillingFields()[0].getText();
+        String p2 = controller.getMillingFields()[1].getText();
+        String p3 = controller.getMillingFields()[2].getText();
+        String p4 = controller.getMillingFields()[3].getText();
+        String p5 = controller.getMillingFields()[4].getText();
+        String p6 = controller.getMillingFields()[5].getText();
+        if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
+                && validNumbers(p6)) {
+            data.setLength(Double.parseDouble(replaceComma(p1)));
+            data.setDepth(Double.parseDouble(replaceComma(p2)));
+            data.setBladeWidth(Double.parseDouble(replaceComma(p3)));
+            data.setZcount(Double.parseDouble(replaceComma(p4)));
+            data.setMillDiameter(Double.parseDouble(replaceComma(p5)));
+            data.setMillLength(Double.parseDouble(replaceComma(p6)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
+    }
+
+    public void discMillingCalc() {
+        String p1 = controller.getMillingFields()[0].getText();
+        String p2 = controller.getMillingFields()[1].getText();
+        String p3 = controller.getMillingFields()[2].getText();
+        String p4 = controller.getMillingFields()[3].getText();
+        String p5 = controller.getMillingFields()[4].getText();
+        String p6 = controller.getMillingFields()[5].getText();
+        if (validNumbers(p1) && validNumbers(p2) && validNumbers(p3) && validNumbers(p4) && validNumbers(p5)
+                && validNumbers(p6)) {
+            data.setLength(Double.parseDouble(replaceComma(p1)));
+            data.setDepth(Double.parseDouble(replaceComma(p2)));
+            data.setBladeWidth(Double.parseDouble(replaceComma(p3)));
+            data.setZcount(Double.parseDouble(replaceComma(p4)));
+            data.setMillDiameter(Double.parseDouble(replaceComma(p5)));
+            data.setMillWidth(Double.parseDouble(replaceComma(p6)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
     }
 
     public String replaceComma(String text) {
