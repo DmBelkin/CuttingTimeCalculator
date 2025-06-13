@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 
 public class WindowController implements ActionListener {
 
@@ -182,7 +181,7 @@ public class WindowController implements ActionListener {
         turning.setLayout(new GridLayout(3, 3));
         turning.setBackground(new Color(200, 200, 200));
         JButton[] buttons = new JButton[9];
-        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Threading", "", "", "", "Back"};
+        String[] types = new String[]{"Turning out", "Boring", "Groove", "Segment", "Threading", "End trimming", "", "", "Back"};
         for (int i = 0; i < 9; i++) {
             buttons[i] = createButton(types[i]);
             turning.add(buttons[i]);
@@ -217,22 +216,18 @@ public class WindowController implements ActionListener {
         render(segmentTurningParameters);
     }
 
-    public void faceTurningParametersPanel() {
-        /**
-         * TODO
-         * сделать панель параметров подрезки торца
-         */
+    public void endTrimmingParametersPanel() {
         threadTurningFields = new JTextField[3];
         JButton[] buttons = new JButton[5];
         String[] types = new String[]{"", "", "", "Go", "Back"};
         threadTurningParameters = new JPanel();
         threadTurningParameters.setLayout(new GridLayout(3, 3));
         threadTurningParameters.setBackground(new Color(200, 200, 200));
-        threadTurningFields[0] = createTextField("Step");
+        threadTurningFields[0] = createTextField("Allowance");
         threadTurningParameters.add(threadTurningFields[0]);
         threadTurningFields[1] = createTextField("Diameter");
         threadTurningParameters.add(threadTurningFields[1]);
-        threadTurningFields[2] = createTextField("Length");
+        threadTurningFields[2] = createTextField("Depth");
         threadTurningParameters.add(threadTurningFields[2]);
         threadTurningParameters.add(isCPU);
         for (int i = 0; i < 5; i++) {

@@ -36,6 +36,9 @@ public class CommandWorker {
         } else if (text.equals("Boring")) {
             data.setToolType(text);
             controller.materialsMatrixPanel();
+        } else if (text.equals("End trimming")) {
+            data.setToolType(text);
+            controller.materialsMatrixPanel();
         } else if (text.equals("Groove")) {
             data.setToolType(text);
             controller.materialsMatrixPanel();
@@ -64,6 +67,8 @@ public class CommandWorker {
                segmentCalc();
             } else if (data.getToolType().equals("Threading")) {
                 threadingCalc();
+            } else if (data.getToolType().equals("End trimming")) {
+                endTrimmingCalc();
             } else if (data.getCuttingType().equals("Turning")) {
                 turningCalc();
             } else if (data.getCuttingType().equals("Milling")) {
@@ -85,6 +90,8 @@ public class CommandWorker {
                 controller.segmentTurningParametersPanel();
             } else if (data.getToolType().equals("Threading")) {
                 controller.threadTurningParametersPanel();
+            } else if (data.getToolType().equals("End trimming")) {
+                controller.endTrimmingParametersPanel();
             } else if (data.getCuttingType().equals("Turning")) {
                 controller.turningParametersWindow();
             } else if (data.getToolType().equals("Circuit")) {
@@ -105,7 +112,7 @@ public class CommandWorker {
                 if (data.getThreadStep() <= 0 || data.getLength() <= 0 || data.getDiameter() <= 0) {
                     return false;
                 }
-            } else if (data.getToolType().equals("Segment")) {
+            } else if (data.getToolType().equals("Segment") || data.getToolType().equals("End trimming")) {
                 if (data.getBladeWidth() <= 0 || data.getDepth() <= 0 || data.getDiameter() <= 0) {
                     return false;
                 }
@@ -137,6 +144,24 @@ public class CommandWorker {
             }
         }
         return true;
+    }
+
+    public void endTrimmingCalc() {
+        String p3 = controller.getThreadTurningFields()[0].getText();
+        String p4 = controller.getThreadTurningFields()[1].getText();
+        String p5 = controller.getThreadTurningFields()[2].getText();
+        if (validNumbers(p3) && validNumbers(p4) && validNumbers(p5)) {
+            data.setBladeWidth(Double.parseDouble(replaceComma(p3)));
+            data.setDiameter(Double.parseDouble(replaceComma(p4)));
+            data.setDepth(Double.parseDouble(replaceComma(p5)));
+            if (!validDTO(data)) {
+                controller.getOutput().setText("this not may be <= 0");
+            } else {
+                calculator.compute(data);
+            }
+        } else {
+            controller.getOutput().setText("Incorrect input");
+        }
     }
 
     public void drillingCalc() {
