@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 
 public class Calculator {
 
@@ -254,13 +254,13 @@ public class Calculator {
         double depth = data.getDepth();
         double[] params = null;
         if (data.getDiameter() <= 26) {
-            params = Vc_drilling[0][column];
+            params = Arrays.copyOfRange(Vc_drilling[0][column], 0, Vc_drilling[0][column].length);
         } else if (data.getDiameter() > 26 && data.getDiameter() <= 33) {
-            params = Vc_drilling[1][column];
+            params = Arrays.copyOfRange(Vc_drilling[1][column], 0, Vc_drilling[1][column].length);
         } else if (data.getDiameter() > 33 && data.getDiameter() <= 43) {
-            params = Vc_drilling[2][column];
+            params = Arrays.copyOfRange(Vc_drilling[2][column], 0, Vc_drilling[2][column].length);
         } else if (data.getDiameter() > 43) {
-            params = Vc_drilling[3][column];
+            params = Arrays.copyOfRange(Vc_drilling[3][column], 0, Vc_drilling[3][column].length);
         }
         double Vc = params[0];
         if (data.isHSS()) {
@@ -268,7 +268,8 @@ public class Calculator {
             Vc /= 4;
         }
         double spin = spinCount(Vc, data.getDiameter());
-        return calculateTime(depth, params[1], spin) + Tpz;
+        double result = calculateTime(depth, params[1], spin) + Tpz;
+        return result;
     }
 
     public int getMaterial(String material) {

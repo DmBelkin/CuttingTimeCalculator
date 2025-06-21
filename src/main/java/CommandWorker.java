@@ -27,7 +27,8 @@ public class CommandWorker {
             controller.millingWindow();
         } else if (text.equals("Drilling")) {
             data.setCuttingType(text);
-            controller.drillingWindow();
+            data.setToolType(text);
+            controller.materialsMatrixPanel();
         } else if (text.equals("Back")) {
             controller.backFunction(controller.getLast());
         } else if (text.equals("Turning out")) {
@@ -85,7 +86,7 @@ public class CommandWorker {
             if (data.getToolType().equals("Disk milling")) {
                 controller.discMillingParametersPanel();
             } else if (data.getCuttingType().equals("Drilling")) {
-                calculator.compute(data);
+                controller.drillingWindow();
             } else if (data.getToolType().equals("Segment")) {
                 controller.segmentTurningParametersPanel();
             } else if (data.getToolType().equals("Threading")) {
@@ -167,14 +168,13 @@ public class CommandWorker {
     public void drillingCalc() {
         String p1 = controller.getDrillingFields()[0].getText();
         String p2 = controller.getDrillingFields()[1].getText();
-        data.setToolType("Drilling");
         if (validNumbers(p1) && validNumbers(p2)) {
             data.setDiameter(Double.parseDouble(replaceComma(p1)));
             data.setDepth(Double.parseDouble(replaceComma(p2)));
             if (!validDTO(data)) {
                 controller.getOutput().setText("this not may be <= 0");
             } else {
-                controller.materialsMatrixPanel();
+                calculator.compute(data);
             }
         } else {
             controller.getOutput().setText("Incorrect input");
