@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class WindowController implements ActionListener {
 
@@ -57,15 +58,11 @@ public class WindowController implements ActionListener {
 
 
     public WindowController() {
-        frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        output = new JTextField();
-        output.setSize(new Dimension(450, 50));
-        output.setFont(new Font("Ink Free", Font.PLAIN, 50));
-        output.setBackground(new Color(30, 30, 30));
-        output.setForeground(new Color(30, 200, 100));
-        output.setText("0.0");
-        frame.add(output, BorderLayout.PAGE_END);
+        frameRender();
+        mainPage();
+    }
+
+    public void frameRender() {
         panel = new JPanel();
         text = new JLabel();
         data = new Data();
@@ -76,7 +73,28 @@ public class WindowController implements ActionListener {
         isHSS = new JToggleButton("HSS");
         isHSS.setFont(new Font("MvBoli", Font.PLAIN, 20));
         isHSS.addActionListener(this);
-        mainPage();
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(450, 340);
+        frame.setResizable(false);
+        frame.setVisible(true);
+        text.setBackground(new Color(30, 30, 30));
+        text.setForeground(new Color(30, 200, 100));
+        text.setHorizontalAlignment(JLabel.CENTER);
+        text.setFont(new Font("Ink Free", Font.PLAIN, 50));
+        text.setText("Cuttingtime calculator");
+        text.setOpaque(true);
+        panel.setLayout(new BorderLayout());
+        panel.setBounds(0, 0, 450, 50);
+        panel.add(text);
+        frame.add(panel, BorderLayout.NORTH);
+        output = new JTextField();
+        output.setSize(new Dimension(450, 50));
+        output.setFont(new Font("Ink Free", Font.PLAIN, 50));
+        output.setBackground(new Color(30, 30, 30));
+        output.setForeground(new Color(30, 200, 100));
+        output.setText("0.0");
+        frame.add(output, BorderLayout.PAGE_END);
     }
 
 
@@ -111,20 +129,6 @@ public class WindowController implements ActionListener {
 
 
     public void mainPage() {
-        frame.setSize(450, 340);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        text.setBackground(new Color(30, 30, 30));
-        text.setForeground(new Color(30, 200, 100));
-        text.setHorizontalAlignment(JLabel.CENTER);
-        text.setFont(new Font("Ink Free", Font.PLAIN, 50));
-        text.setText("Cuttingtime calculator");
-        text.setOpaque(true);
-        panel.setLayout(new BorderLayout());
-        panel.setBounds(0, 0, 450, 50);
-        panel.add(text);
-        frame.add(panel, BorderLayout.NORTH);
-
         toolType = new JPanel();
         toolType.setLayout(new GridLayout(3, 3));
         toolType.setBackground(new Color(200, 200, 200));
