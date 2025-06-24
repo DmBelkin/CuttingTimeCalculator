@@ -60,6 +60,7 @@ public class WindowController implements ActionListener {
     public WindowController() {
         frameRender();
         mainPage();
+        frame.setVisible(true);
     }
 
     public void frameRender() {
@@ -77,7 +78,6 @@ public class WindowController implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(450, 340);
         frame.setResizable(false);
-        frame.setVisible(true);
         text.setBackground(new Color(30, 30, 30));
         text.setForeground(new Color(30, 200, 100));
         text.setHorizontalAlignment(JLabel.CENTER);
@@ -87,13 +87,13 @@ public class WindowController implements ActionListener {
         panel.setLayout(new BorderLayout());
         panel.setBounds(0, 0, 450, 50);
         panel.add(text);
-        frame.add(panel, BorderLayout.NORTH);
         output = new JTextField();
         output.setSize(new Dimension(450, 50));
         output.setFont(new Font("Ink Free", Font.PLAIN, 50));
         output.setBackground(new Color(30, 30, 30));
         output.setForeground(new Color(30, 200, 100));
         output.setText("0.0");
+        frame.add(panel, BorderLayout.NORTH);
         frame.add(output, BorderLayout.PAGE_END);
     }
 
